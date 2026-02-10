@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Sports Experience</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    
+    <!-- Header -->
+    <header class="header">
+        <div class="container-fluid">
+            <nav class="navbar navbar-expand">
+                <div class="container-fluid px-0">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#" data-page="home">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-page="gallery">Galería</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            
+            <!-- Home Page -->
+            <div class="home-page" id="homePage">
+                <div class="row g-4">
+                    
+                    <!-- Left Column - AR Canvas -->
+                    <div class="col-lg-8">
+                        <div class="canvas-container">
+                            <div class="ar-canvas" id="arCanvas">
+                                <!-- Video element para la cámara -->
+                                <video id="videoElement" autoplay playsinline></video>
+                                
+                                <!-- Overlay con marco de escaneo -->
+                                <div class="camera-overlay">
+                                    <div class="scan-frame">
+                                        <div class="scan-line"></div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Indicador de estado de cámara -->
+                                <div class="camera-status">
+                                    <div class="status-indicator"></div>
+                                    <span>Cámara activa</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Control Buttons -->
+                            <div class="controls">
+                                <button class="control-btn" id="prevBtn" title="Anterior">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <button class="control-btn" id="playBtn" title="Reproducir">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                                <button class="control-btn" id="nextBtn" title="Siguiente">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Column - Info Cards -->
+                    <div class="col-lg-4">
+                        
+                        <!-- Trivia Card -->
+                        <div class="info-card trivia-card">
+                            <h3>Datos clave:</h3>
+                            <div class="trivia-question" id="triviaQuestion">
+                                ¿Cuál es el diámetro oficial de un balón de fútbol profesional?
+                            </div>
+                            <div class="trivia-controls">
+                                <button class="trivia-btn" id="triviaPrev">
+                                    <i class="fas fa-arrow-left"></i> Anterior
+                                </button>
+                                <span class="trivia-indicator">
+                                    <span id="currentQ">1</span> / <span id="totalQ">5</span>
+                                </span>
+                                <button class="trivia-btn" id="triviaNext">
+                                    Siguiente <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Scan Info Card -->
+                        <div class="info-card scan-info">
+                            <div class="scan-placeholder" id="scanInfo">
+                                <i class="fas fa-qrcode"></i>
+                                <p>Escanea un patrón para ver información del objeto</p>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <!-- Gallery Page (Hidden) -->
+            <div class="gallery-page" id="galleryPage">
+                <h2 class="text-center mb-4" style="font-family: 'Orbitron', sans-serif; font-size: 2.5rem; text-transform: uppercase; letter-spacing: 2px;">
+                    Galería de contenidos
+                </h2>
+                <div class="gallery-grid">
+                    <!-- Gallery items -->
+                    <div class="gallery-item">
+                        <div class="gallery-item-image">
+                            <i class="fas fa-futbol" style="font-size: 4rem; color: rgba(0,0,0,0.3);"></i>
+                        </div>
+                        <h4>Balón de Fútbol</h4>
+                        <p>Modelo oficial FIFA</p>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="gallery-item-image">
+                            <i class="fas fa-running" style="font-size: 4rem; color: rgba(0,0,0,0.3);"></i>
+                        </div>
+                        <h4>Jugador</h4>
+                        <p>Animación de movimiento</p>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="gallery-item-image">
+                            <i class="fas fa-trophy" style="font-size: 4rem; color: rgba(0,0,0,0.3);"></i>
+                        </div>
+                        <h4>Trofeo</h4>
+                        <p>Copa del campeonato</p>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="gallery-item-image">
+                            <i class="fas fa-flag" style="font-size: 4rem; color: rgba(0,0,0,0.3);"></i>
+                        </div>
+                        <h4>Estadio</h4>
+                        <p>Vista panorámica 360°</p>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </main>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script src="app.js"></script>
+    
+</body>
+</html>

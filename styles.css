@@ -1,0 +1,690 @@
+/* ===== VARIABLES CSS ===== */
+:root {
+    --primary-magenta: #d4145a;
+    --secondary-magenta: #a8195e;
+    --accent-pink: #ff3377;
+    --dark-blue: #0a1628;
+    --deep-purple: #1a0f3d;
+    --neon-cyan: #00ffff;
+    --canvas-bg: #b8b9c7;
+}
+
+/* ===== RESET Y ESTILOS BASE ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Exo 2', sans-serif;
+    overflow-x: hidden;
+    background: linear-gradient(135deg, var(--dark-blue) 0%, var(--deep-purple) 50%, #2a0a3d 100%);
+    min-height: 100vh;
+    color: #ffffff;
+}
+
+/* Animated background effect */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(212, 20, 90, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(168, 25, 94, 0.15) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+    animation: pulse 8s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 0.8; }
+}
+
+/* ===== HEADER STYLES ===== */
+.header {
+    background: linear-gradient(90deg, var(--primary-magenta) 0%, var(--secondary-magenta) 100%);
+    padding: 1.2rem 0;
+    position: relative;
+    z-index: 10;
+    box-shadow: 0 4px 20px rgba(212, 20, 90, 0.4);
+}
+
+.header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent 0%, var(--neon-cyan) 50%, transparent 100%);
+    animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.nav-link {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.85) !important;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 0.5rem 2rem !important;
+    margin: 0 0.5rem;
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.navbar-nav {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav-link::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: white;
+    transform: translateX(-50%);
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: #ffffff !important;
+    transform: translateY(-2px);
+}
+
+.nav-link:hover::before,
+.nav-link.active::before {
+    width: 80%;
+}
+
+/* ===== MAIN CONTENT ===== */
+.main-content {
+    position: relative;
+    z-index: 1;
+    padding: 2rem 0;
+    min-height: calc(100vh - 100px);
+}
+
+.container {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* ===== CANVAS CONTAINER ===== */
+.canvas-container {
+    background: var(--canvas-bg);
+    border-radius: 25px;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.5),
+        inset 0 0 40px rgba(255, 255, 255, 0.1);
+    height: 600px;
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.ar-canvas {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    position: relative;
+    overflow: hidden;
+}
+
+#videoElement {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1); /* Efecto espejo para que se vea más natural */
+}
+
+/* ===== CAMERA OVERLAY Y SCAN FRAME ===== */
+.camera-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.scan-frame {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 250px;
+    height: 250px;
+    border: 2px solid rgba(0, 255, 255, 0.6);
+    border-radius: 10px;
+    box-shadow: 
+        0 0 20px rgba(0, 255, 255, 0.4),
+        inset 0 0 20px rgba(0, 255, 255, 0.2);
+}
+
+/* Esquinas del marco de escaneo */
+.scan-frame::before,
+.scan-frame::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 3px solid var(--neon-cyan);
+}
+
+/* Esquina superior izquierda */
+.scan-frame::before {
+    top: -3px;
+    left: -3px;
+    border-right: none;
+    border-bottom: none;
+}
+
+/* Esquina superior derecha */
+.scan-frame::after {
+    top: -3px;
+    right: -3px;
+    border-left: none;
+    border-bottom: none;
+}
+
+/* Crear pseudo-elemento para esquinas inferiores */
+.camera-overlay::before,
+.camera-overlay::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    border: 3px solid var(--neon-cyan);
+}
+
+/* Esquina inferior izquierda */
+.camera-overlay::before {
+    transform: translate(calc(-125px - 3px), calc(125px - 17px));
+    border-right: none;
+    border-top: none;
+}
+
+/* Esquina inferior derecha */
+.camera-overlay::after {
+    transform: translate(calc(125px - 17px), calc(125px - 17px));
+    border-left: none;
+    border-top: none;
+}
+
+.scan-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+    animation: scanAnimation 2s ease-in-out infinite;
+}
+
+@keyframes scanAnimation {
+    0%, 100% { top: 0; opacity: 0; }
+    50% { top: 100%; opacity: 1; }
+}
+
+.camera-status {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px 15px;
+    border-radius: 10px;
+    color: white;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #00ff00;
+    animation: blink 2s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+/* ===== CONTROL BUTTONS ===== */
+.controls {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 2rem;
+    z-index: 10;
+}
+
+.control-btn {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-magenta) 0%, var(--secondary-magenta) 100%);
+    border: none;
+    color: white;
+    font-size: 1.8rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 
+        0 4px 15px rgba(212, 20, 90, 0.4),
+        inset 0 -2px 5px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.control-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.control-btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.control-btn:hover {
+    transform: scale(1.1) translateY(-5px);
+    box-shadow: 
+        0 8px 25px rgba(212, 20, 90, 0.6),
+        inset 0 -2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.control-btn:active {
+    transform: scale(0.95);
+}
+
+.control-btn i {
+    position: relative;
+    z-index: 1;
+}
+
+/* ===== INFO CARDS ===== */
+.info-card {
+    background: linear-gradient(135deg, rgba(212, 20, 90, 0.85) 0%, rgba(168, 25, 94, 0.85) 100%);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 40px rgba(212, 20, 90, 0.3);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.info-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transform: rotate(45deg);
+    animation: shine 6s infinite;
+}
+
+@keyframes shine {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 50px rgba(212, 20, 90, 0.5);
+}
+
+.info-card h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    z-index: 1;
+}
+
+.info-card p {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.95);
+    position: relative;
+    z-index: 1;
+}
+
+/* ===== TRIVIA CARD ===== */
+.trivia-card {
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.trivia-question {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.trivia-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.trivia-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 600;
+}
+
+.trivia-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+.trivia-indicator {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+/* ===== SCAN INFO CARD ===== */
+.scan-info {
+    min-height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.scan-placeholder {
+    text-align: center;
+    opacity: 0.7;
+}
+
+.scan-placeholder i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    animation: scanPulse 2s ease-in-out infinite;
+}
+
+@keyframes scanPulse {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+}
+
+/* ===== GALLERY PAGE ===== */
+.gallery-page {
+    display: none;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+    padding: 2rem 0;
+}
+
+.gallery-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.gallery-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(212, 20, 90, 0.3);
+}
+
+.gallery-item-image {
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(135deg, #b8b9c7 0%, #9ea0b8 100%);
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gallery-item h4 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+/* ===== RESPONSIVE ===== */
+
+/* Tablets */
+@media (max-width: 992px) and (min-width: 769px) {
+    .canvas-container {
+        height: 550px;
+    }
+    
+    .nav-link {
+        padding: 0.6rem 1.5rem !important;
+    }
+}
+
+/* Mobile devices */
+@media (max-width: 768px) {
+    /* Header mobile */
+    .header {
+        padding: 0.8rem 0;
+    }
+    
+    .navbar {
+        padding: 0;
+    }
+    
+    .navbar-nav {
+        width: 100%;
+        gap: 0;
+        margin: 0;
+    }
+    
+    .nav-item {
+        flex: 1;
+        text-align: center;
+        margin: 0;
+    }
+    
+    .nav-link {
+        font-size: 1rem;
+        padding: 0.8rem 1rem !important;
+        margin: 0 !important;
+        width: 100%;
+        display: block;
+        border-radius: 0 !important;
+    }
+    
+    .nav-link::before {
+        bottom: 5px;
+    }
+    
+    /* Main content mobile */
+    .main-content {
+        padding: 1.5rem 0;
+    }
+    
+    /* Canvas más grande en móvil */
+    .canvas-container {
+        height: 500px;
+        margin-bottom: 1.5rem;
+        border-radius: 20px;
+    }
+    
+    #videoElement {
+        object-fit: cover;
+    }
+    
+    /* Marco de escaneo ajustado */
+    .scan-frame {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .camera-overlay::before {
+        transform: translate(calc(-100px - 3px), calc(100px - 17px));
+    }
+    
+    .camera-overlay::after {
+        transform: translate(calc(100px - 17px), calc(100px - 17px));
+    }
+    
+    /* Botones de control */
+    .control-btn {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+    
+    .controls {
+        gap: 1.2rem;
+        bottom: 25px;
+    }
+    
+    /* Info cards */
+    .info-card {
+        padding: 1.5rem;
+        border-radius: 15px;
+        margin-bottom: 1.2rem;
+    }
+    
+    .info-card h3 {
+        font-size: 1.3rem;
+    }
+    
+    .trivia-card {
+        min-height: 200px;
+    }
+    
+    .trivia-question {
+        font-size: 1rem;
+    }
+    
+    .trivia-btn {
+        font-size: 0.85rem;
+        padding: 0.4rem 0.8rem;
+    }
+    
+    .scan-info {
+        min-height: 220px;
+    }
+    
+    /* Camera status */
+    .camera-status {
+        font-size: 0.85rem;
+        padding: 8px 12px;
+        top: 15px;
+        left: 15px;
+    }
+    
+    /* Gallery grid mobile */
+    .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1rem;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
+    .nav-link {
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+        padding: 0.7rem 0.5rem !important;
+    }
+    
+    .canvas-container {
+        height: 450px;
+    }
+    
+    .scan-frame {
+        width: 180px;
+        height: 180px;
+    }
+    
+    .camera-overlay::before {
+        transform: translate(calc(-90px - 3px), calc(90px - 17px));
+    }
+    
+    .camera-overlay::after {
+        transform: translate(calc(90px - 17px), calc(90px - 17px));
+    }
+    
+    .control-btn {
+        width: 55px;
+        height: 55px;
+        font-size: 1.3rem;
+    }
+    
+    .controls {
+        gap: 1rem;
+    }
+    
+    .trivia-btn {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.6rem;
+    }
+    
+    .info-card h3 {
+        font-size: 1.2rem;
+    }
+}
