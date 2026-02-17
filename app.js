@@ -1,31 +1,88 @@
 import * as THREE from 'three';
 import { MindARThree } from 'mindar-image-three';
 
-// ===== CONFIGURACIÓN DE MODELOS 3D =====
+// ===== CONFIGURACIÓN DE MODELOS 3D (9 ITEMS) =====
 const models3D = [
+    // Index 0
     {
         id: 'ball',
         name: 'Balón de Fútbol',
-        description: 'Un balón de fútbol profesional oficial FIFA. El diseño icónico de 32 paneles (12 pentágonos negros y 20 hexágonos blancos) lo convierte en el balón más reconocible del mundo.',
+        description: 'Un balón de fútbol profesional oficial FIFA.',
         type: 'sphere',
         color: 0xFFFFFF,
         scale: 0.5
     },
+    // Index 1
     {
         id: 'trophy',
         name: 'Trofeo de Campeonato',
-        description: 'Copa dorada del campeonato. Representa la gloria y el éxito en el deporte más popular del mundo.',
+        description: 'Copa dorada del campeonato.',
         type: 'cone',
         color: 0xFFD700,
         scale: 0.6
     },
+    // Index 2
     {
         id: 'cube',
         name: 'Cubo Deportivo',
-        description: 'Modelo 3D de ejemplo con textura deportiva. Perfecto para demostrar las capacidades de AR.',
+        description: 'Modelo 3D de ejemplo.',
         type: 'box',
         color: 0xFF3377,
         scale: 0.5
+    },
+    // Index 3
+    {
+        id: 'cylinder',
+        name: 'Torre de Control',
+        description: 'Representación cilíndrica de una estructura.',
+        type: 'cylinder',
+        color: 0x00FF00, // Verde
+        scale: 0.6
+    },
+    // Index 4
+    {
+        id: 'torus',
+        name: 'Anillo Olímpico',
+        description: 'Geometría circular compleja.',
+        type: 'torus',
+        color: 0x00FFFF, // Cyan
+        scale: 0.4
+    },
+    // Index 5
+    {
+        id: 'icosahedron',
+        name: 'Diamante',
+        description: 'Figura multifacética brillante.',
+        type: 'icosahedron',
+        color: 0x9D00FF, // Morado
+        scale: 0.5
+    },
+    // Index 6
+    {
+        id: 'capsule',
+        name: 'Cápsula del Tiempo',
+        description: 'Contenedor futurista.',
+        type: 'capsule', // Usaremos geometría personalizada para esto
+        color: 0xFF8800, // Naranja
+        scale: 0.5
+    },
+    // Index 7
+    {
+        id: 'dodecahedron',
+        name: 'Balón Poligonal',
+        description: 'Estructura matemática de 12 caras.',
+        type: 'dodecahedron',
+        color: 0xFF0055, // Rojo
+        scale: 0.55
+    },
+    // Index 8
+    {
+        id: 'octahedron',
+        name: 'Pirámide Doble',
+        description: 'Estructura de equilibrio perfecto.',
+        type: 'octahedron',
+        color: 0x0000FF, // Azul
+        scale: 0.6
     }
 ];
 
@@ -51,16 +108,17 @@ async function initAR() {
         // Crear instancia de MindAR
         mindarThree = new MindARThree({
             container: container,
-            // Usamos la versión 1.2.5 del target para coincidir con la librería
-            imageTargetSrc: './banderas.mind',
-            //maxTrack: 1,
-            //filterMinCF: 0.0001,
-            //filterBeta: 0.001,
+            // Asegúrate que este archivo tiene las imágenes en el mismo orden que tu array models3D
+            imageTargetSrc: './banderas.mind', 
+            // Opcional: Si quieres detectar 2 imágenes al mismo tiempo, descomenta esto:
+            // maxTrack: 2,
         });
         
         const { renderer, scene, camera } = mindarThree;
         
+        // CORRECCIÓN DE PANTALLA NEGRA
         renderer.setClearColor(0x000000, 0); // Fondo transparente
+        
         // Configurar luces
         const ambientLight = new THREE.AmbientLight(0xffffff, 1);
         scene.add(ambientLight);
@@ -69,34 +127,76 @@ async function initAR() {
         directionalLight.position.set(0, 5, 5);
         scene.add(directionalLight);
         
-        // Crear anchor (punto donde aparecerá el modelo)
-        currentAnchor = mindarThree.addAnchor(0);
+        // === BUCLE PARA MÚLTIPLES OBJETIVOS ===
+        // Recorremos el array de modelos para crear un anchor por cada uno
+        models3D.forEach((item, index) => {
+            
+            // 1. Crear anchor para el índice actual (0, 1, 2...)
+            const anchor = mindarThree.addAnchor(index);
+            
+            // 2. Crear el modelo 3D correspondiente
+            const mesh = createModel(item);
+            anchor.group.add(mesh);
+            
+            // 3. Evento: Cuando se encuentra ESTA imagen
+            anchor.onTargetFound = () => {
+                console.log(`¡Marcador ${index} (${item.name}) detectado!`);
+                
+                // Actualizamos las variables globales para que los botones de rotación funcionen con este objeto
+                currentObject = mesh;
+                currentAnchor = anchor;
+                
+                // Actualizamos la UI
+                updateStatus(`¡${item.name} detectado!`, 'active');
+                updateScanInfo(item);
+            };
+            
+            // 4. Evento: Cuando se pierde ESTA imagen
+            anchor.onTargetLost = () => {
+                console.log(`Marcador ${index} perdido`);
+                updateStatus('Buscando marcador...', 'searching');
+                resetScanInfo();
+            };
+        });
+        // ======================================
+   for (let i = 0; i < 9; i++) {
+    const debugAnchor = mindarThree.addAnchor(i);
+    
+    debugAnchor.onTargetFound = () => {
+        console.log(`🔥 ¡DIAGNÓSTICO! Se detectó la imagen número: ${i}`);
+        console.log(`   (Esta imagen corresponde a la pestaña 'Image ${i+1}' del compilador)`);
         
-        // Crear el primer modelo 3D
-        currentObject = createModel(models3D[0]);
-        currentAnchor.group.add(currentObject);
-        
-        // Event listeners para detección
-        currentAnchor.onTargetFound = () => {
-            console.log('¡Marcador detectado!');
-            updateStatus('¡Marcador detectado!', 'active');
-            updateScanInfo(models3D[0]);
-        };
-        
-        currentAnchor.onTargetLost = () => {
-            console.log('Marcador perdido');
-            updateStatus('Buscando marcador...', 'searching');
-            resetScanInfo();
-        };
-        
+        // Alerta visual temporal para que sepas que funciona
+        updateStatus(`DEBUG: Detectada img #${i}`, 'searching'); 
+    };
+}     
         // Iniciar AR
         await mindarThree.start();
+
+// === CÓDIGO DE DIAGNÓSTICO ===
+// Esto imprimirá en la consola cuántas imágenes detectó realmente el sistema
+// Accedemos al controlador interno de MindAR para verificar
+const totalTargets = mindarThree.controller.getNumTargets ? mindarThree.controller.getNumTargets() : "No disponible";
+console.log("------------------------------------------------");
+console.log(`🔍 DIAGNÓSTICO:`);
+console.log(`📦 Imágenes en el archivo .mind: ${totalTargets}`);
+console.log(`📝 Modelos en tu código: ${models3D.length}`);
+
+if (models3D.length > totalTargets) {
+    console.error("❌ ERROR: Tienes más modelos definidos en JS que imágenes en el archivo .mind");
+    console.warn("SOLUCIÓN: Vuelve a compilar el archivo .mind asegurándote de subir TODAS las imágenes juntas.");
+} else {
+    console.log("✅ La cantidad de imágenes coincide.");
+}
+console.log("------------------------------------------------");
+
         updateStatus('AR activo - Apunta a un marcador', 'active');
         isARStarted = true;
         
         // Loop de renderizado
         renderer.setAnimationLoop(() => {
-            if (currentObject && currentAnchor.visible) {
+            // Nota: currentObject se actualiza automáticamente en onTargetFound
+            if (currentObject && currentAnchor && currentAnchor.visible) {
                 // Si está animando, rotar automáticamente
                 if (isAnimating) {
                     manualRotation += 0.02;
@@ -118,43 +218,59 @@ async function initAR() {
 function createModel(modelData) {
     let geometry, material, mesh;
     
+    // TRUCO 1: Usamos MeshBasicMaterial en lugar de Standard.
+    // Este material NO necesita luces, brilla con su propio color.
+    // Así descartamos problemas de iluminación.
+    const baseMaterial = new THREE.MeshBasicMaterial({
+        color: modelData.color,
+        transparent: true,
+        opacity: 0.9,
+    });
+
+    // Geometrías (sin cambios, solo agregando los faltantes)
     switch(modelData.type) {
         case 'sphere':
             geometry = new THREE.SphereGeometry(modelData.scale, 32, 32);
-            material = new THREE.MeshStandardMaterial({
-                color: modelData.color,
-                roughness: 0.7,
-                metalness: 0.3
-            });
-            break;
-            
+            break; 
         case 'cone':
             geometry = new THREE.ConeGeometry(modelData.scale * 0.5, modelData.scale * 1.5, 32);
-            material = new THREE.MeshStandardMaterial({
-                color: modelData.color,
-                roughness: 0.2,
-                metalness: 0.8,
-                emissive: 0xFFD700,
-                emissiveIntensity: 0.2
-            });
             break;
-            
         case 'box':
             geometry = new THREE.BoxGeometry(modelData.scale, modelData.scale, modelData.scale);
-            material = new THREE.MeshStandardMaterial({
-                color: modelData.color,
-                roughness: 0.5,
-                metalness: 0.5
-            });
             break;
-            
+        case 'cylinder':
+            geometry = new THREE.CylinderGeometry(modelData.scale * 0.5, modelData.scale * 0.5, modelData.scale * 1.2, 32);
+            break;
+        case 'torus':
+            geometry = new THREE.TorusGeometry(modelData.scale * 0.6, modelData.scale * 0.2, 16, 50);
+            break;
+        case 'icosahedron':
+            geometry = new THREE.IcosahedronGeometry(modelData.scale, 0);
+            break;
+        case 'dodecahedron':
+            geometry = new THREE.DodecahedronGeometry(modelData.scale, 0);
+            break;
+        case 'octahedron':
+            geometry = new THREE.OctahedronGeometry(modelData.scale, 0);
+            break;
         default:
             geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
-            material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
     }
     
+    // Clonamos el material para que cada figura tenga su propio color
+    material = baseMaterial.clone();
+    material.color.setHex(modelData.color);
+    
+    // TRUCO 2: Wireframe (Malla de alambre) opcional
+    // Si descomentas la siguiente línea, verás la estructura del objeto. Ayuda mucho a depurar.
+    // material.wireframe = true;
+
     mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(0, 0, 0);
+    
+    // TRUCO 3: POSICIÓN Z (CRUCIAL)
+    // Levantamos el objeto 0.5 unidades sobre la imagen para que no quede "enterrado"
+    // El eje Z sale perpendicular de la imagen hacia la cámara.
+    mesh.position.set(0, 0, 0.3); 
     
     return mesh;
 }

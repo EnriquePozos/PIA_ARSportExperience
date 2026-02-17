@@ -1,4 +1,3 @@
-/* ===== VARIABLES CSS ===== */
 :root {
     --primary-magenta: #d4145a;
     --secondary-magenta: #a8195e;
@@ -9,7 +8,6 @@
     --canvas-bg: #b8b9c7;
 }
 
-/* ===== RESET Y ESTILOS BASE ===== */
 * {
     margin: 0;
     padding: 0;
@@ -24,7 +22,6 @@ body {
     color: #ffffff;
 }
 
-/* Animated background effect */
 body::before {
     content: '';
     position: fixed;
@@ -45,7 +42,6 @@ body::before {
     50% { opacity: 0.8; }
 }
 
-/* ===== HEADER STYLES ===== */
 .header {
     background: linear-gradient(90deg, var(--primary-magenta) 0%, var(--secondary-magenta) 100%);
     padding: 1.2rem 0;
@@ -113,7 +109,6 @@ body::before {
     width: 80%;
 }
 
-/* ===== MAIN CONTENT ===== */
 .main-content {
     position: relative;
     z-index: 1;
@@ -126,9 +121,8 @@ body::before {
     padding-right: 15px;
 }
 
-/* ===== CANVAS CONTAINER ===== */
 .canvas-container {
-    background: var(--canvas-bg);
+    background: transparent !important;
     border-radius: 25px;
     padding: 0;
     position: relative;
@@ -151,13 +145,12 @@ body::before {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: transparent;
+    background: transparent !important;
     position: relative;
     overflow: hidden;
     z-index: 1;
 }
 
-/* Mind AR Container */
 #container {
     position: absolute;
     width: 100%;
@@ -167,16 +160,28 @@ body::before {
     z-index: 2;
 }
 
-#container canvas {
+#container video {
+    position: absolute !important;
+    top: 0;
+    left: 0;
     width: 100% !important;
     height: 100% !important;
-    object-fit: cover;
-}
-video{
-    z-index: 10 !important;
+    object-fit: cover !important;
+    z-index: -100 !important;
 }
 
-/* ===== CAMERA OVERLAY Y SCAN FRAME ===== */
+#container canvas {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    z-index: 10 !important;
+    display: block !important;
+    background-color: transparent !important;
+}
+
 .camera-overlay {
     position: absolute;
     top: 0;
@@ -184,7 +189,7 @@ video{
     width: 100%;
     height: 100%;
     pointer-events: none;
-    z-index: 5;
+    z-index: 999;
 }
 
 .scan-frame {
@@ -201,7 +206,6 @@ video{
         inset 0 0 20px rgba(0, 255, 255, 0.2);
 }
 
-/* Esquinas del marco de escaneo */
 .scan-frame::before,
 .scan-frame::after {
     content: '';
@@ -211,7 +215,6 @@ video{
     border: 3px solid var(--neon-cyan);
 }
 
-/* Esquina superior izquierda */
 .scan-frame::before {
     top: -3px;
     left: -3px;
@@ -219,7 +222,6 @@ video{
     border-bottom: none;
 }
 
-/* Esquina superior derecha */
 .scan-frame::after {
     top: -3px;
     right: -3px;
@@ -227,7 +229,6 @@ video{
     border-bottom: none;
 }
 
-/* Crear pseudo-elemento para esquinas inferiores */
 .camera-overlay::before,
 .camera-overlay::after {
     content: '';
@@ -239,14 +240,12 @@ video{
     border: 3px solid var(--neon-cyan);
 }
 
-/* Esquina inferior izquierda */
 .camera-overlay::before {
     transform: translate(calc(-125px - 3px), calc(125px - 17px));
     border-right: none;
     border-top: none;
 }
 
-/* Esquina inferior derecha */
 .camera-overlay::after {
     transform: translate(calc(125px - 17px), calc(125px - 17px));
     border-left: none;
@@ -280,7 +279,7 @@ video{
     display: flex;
     align-items: center;
     gap: 8px;
-    z-index: 10;
+    z-index: 1000;
 }
 
 .status-indicator {
@@ -296,7 +295,6 @@ video{
     50% { opacity: 0.3; }
 }
 
-/* ===== CONTROL BUTTONS ===== */
 .controls {
     position: absolute;
     bottom: 30px;
@@ -304,7 +302,7 @@ video{
     transform: translateX(-50%);
     display: flex;
     gap: 2rem;
-    z-index: 10;
+    z-index: 1000;
 }
 
 .control-btn {
@@ -322,6 +320,7 @@ video{
         inset 0 -2px 5px rgba(0, 0, 0, 0.2);
     position: relative;
     overflow: hidden;
+    pointer-events: auto;
 }
 
 .control-btn::before {
@@ -358,7 +357,6 @@ video{
     z-index: 1;
 }
 
-/* ===== INFO CARDS ===== */
 .info-card {
     background: linear-gradient(135deg, rgba(212, 20, 90, 0.85) 0%, rgba(168, 25, 94, 0.85) 100%);
     border-radius: 20px;
@@ -413,7 +411,6 @@ video{
     z-index: 1;
 }
 
-/* ===== TRIVIA CARD ===== */
 .trivia-card {
     min-height: 220px;
     display: flex;
@@ -456,7 +453,6 @@ video{
     opacity: 0.8;
 }
 
-/* ===== SCAN INFO CARD ===== */
 .scan-info {
     min-height: 250px;
     display: flex;
@@ -480,7 +476,6 @@ video{
     50% { opacity: 1; transform: scale(1.1); }
 }
 
-/* ===== GALLERY PAGE ===== */
 .gallery-page {
     display: none;
 }
@@ -524,9 +519,6 @@ video{
     margin-bottom: 0.5rem;
 }
 
-/* ===== RESPONSIVE ===== */
-
-/* Tablets */
 @media (max-width: 992px) and (min-width: 769px) {
     .canvas-container {
         height: 550px;
@@ -537,9 +529,7 @@ video{
     }
 }
 
-/* Mobile devices */
 @media (max-width: 768px) {
-    /* Header mobile */
     .header {
         padding: 0.8rem 0;
     }
@@ -573,19 +563,16 @@ video{
         bottom: 5px;
     }
     
-    /* Main content mobile */
     .main-content {
         padding: 1.5rem 0;
     }
     
-    /* Canvas más grande en móvil */
     .canvas-container {
         height: 500px;
         margin-bottom: 1.5rem;
         border-radius: 20px;
     }
     
-    /* Marco de escaneo ajustado */
     .scan-frame {
         width: 200px;
         height: 200px;
@@ -599,7 +586,6 @@ video{
         transform: translate(calc(100px - 17px), calc(100px - 17px));
     }
     
-    /* Botones de control */
     .control-btn {
         width: 60px;
         height: 60px;
@@ -611,7 +597,6 @@ video{
         bottom: 25px;
     }
     
-    /* Info cards */
     .info-card {
         padding: 1.5rem;
         border-radius: 15px;
@@ -639,7 +624,6 @@ video{
         min-height: 220px;
     }
     
-    /* Camera status */
     .camera-status {
         font-size: 0.85rem;
         padding: 8px 12px;
@@ -647,14 +631,12 @@ video{
         left: 15px;
     }
     
-    /* Gallery grid mobile */
     .gallery-grid {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
         gap: 1rem;
     }
 }
 
-/* Extra small devices */
 @media (max-width: 480px) {
     .nav-link {
         font-size: 0.9rem;
