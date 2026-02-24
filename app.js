@@ -36,7 +36,7 @@ const models3D = [
         name: 'Torre de Control',
         description: 'Representación cilíndrica de una estructura.',
         type: 'cylinder',
-        color: 0x00FF00, // Verde
+        color: 0x00FF00,
         scale: 0.6
     },
     // Index 4
@@ -45,7 +45,7 @@ const models3D = [
         name: 'Anillo Olímpico',
         description: 'Geometría circular compleja.',
         type: 'torus',
-        color: 0x00FFFF, // Cyan
+        color: 0x00FFFF,
         scale: 0.4
     },
     // Index 5
@@ -54,7 +54,7 @@ const models3D = [
         name: 'Diamante',
         description: 'Figura multifacética brillante.',
         type: 'icosahedron',
-        color: 0x9D00FF, // Morado
+        color: 0x9D00FF,
         scale: 0.5
     },
     // Index 6
@@ -62,8 +62,8 @@ const models3D = [
         id: 'capsule',
         name: 'Cápsula del Tiempo',
         description: 'Contenedor futurista.',
-        type: 'capsule', // Usaremos geometría personalizada para esto
-        color: 0xFF8800, // Naranja
+        type: 'capsule',
+        color: 0xFF8800,
         scale: 0.5
     },
     // Index 7
@@ -72,7 +72,7 @@ const models3D = [
         name: 'Balón Poligonal',
         description: 'Estructura matemática de 12 caras.',
         type: 'dodecahedron',
-        color: 0xFF0055, // Rojo
+        color: 0xFF0055,
         scale: 0.55
     },
     // Index 8
@@ -81,7 +81,7 @@ const models3D = [
         name: 'Pirámide Doble',
         description: 'Estructura de equilibrio perfecto.',
         type: 'octahedron',
-        color: 0x0000FF, // Azul
+        color: 0x0000FF,
         scale: 0.6
     }
 ];
@@ -99,25 +99,26 @@ async function initAR() {
     const container = document.getElementById('container');
     const arStatus = document.getElementById('arStatus');
     
-    // LIMPIEZA CRÍTICA: Evita duplicados si se reinicia la app
+    // Limpieza: Evita duplicados si se reinicia la app
     if(container) container.innerHTML = '';
 
     try {
         updateStatus('Iniciando cámara AR...', 'loading');
         
-        // Crear instancia de MindAR
+        // Crear instancia de MindAR CON UI DESACTIVADO
         mindarThree = new MindARThree({
             container: container,
-            // Asegúrate que este archivo tiene las imágenes en el mismo orden que tu array models3D
-            imageTargetSrc: './banderas.mind', 
-            // Opcional: Si quieres detectar 2 imágenes al mismo tiempo, descomenta esto:
-            // maxTrack: 2,
+            imageTargetSrc: './banderas.mind',
+            // ⭐ CLAVE: Desactivar el UI por defecto de MindAR
+            uiLoading: "no",
+            uiScanning: "no", 
+            uiError: "no"
         });
         
         const { renderer, scene, camera } = mindarThree;
         
-        // CORRECCIÓN DE PANTALLA NEGRA
-        renderer.setClearColor(0x000000, 0); // Fondo transparente
+        // Fondo transparente para que se vea la cámara
+        renderer.setClearColor(0x000000, 0);
         
         // Configurar luces
         const ambientLight = new THREE.AmbientLight(0xffffff, 1);
@@ -127,81 +128,38 @@ async function initAR() {
         directionalLight.position.set(0, 5, 5);
         scene.add(directionalLight);
         
-        // === BUCLE PARA MÚLTIPLES OBJETIVOS ===
-        // Recorremos el array de modelos para crear un anchor por cada uno
+        // Crear un anchor y modelo por cada imagen
         models3D.forEach((item, index) => {
-            
-            // 1. Crear anchor para el índice actual (0, 1, 2...)
             const anchor = mindarThree.addAnchor(index);
-            
-            // 2. Crear el modelo 3D correspondiente
             const mesh = createModel(item);
             anchor.group.add(mesh);
             
-            // 3. Evento: Cuando se encuentra ESTA imagen
             anchor.onTargetFound = () => {
                 console.log(`¡Marcador ${index} (${item.name}) detectado!`);
-                
-                // Actualizamos las variables globales para que los botones de rotación funcionen con este objeto
                 currentObject = mesh;
                 currentAnchor = anchor;
-                
-                // Actualizamos la UI
                 updateStatus(`¡${item.name} detectado!`, 'active');
                 updateScanInfo(item);
             };
             
-            // 4. Evento: Cuando se pierde ESTA imagen
             anchor.onTargetLost = () => {
                 console.log(`Marcador ${index} perdido`);
                 updateStatus('Buscando marcador...', 'searching');
                 resetScanInfo();
             };
         });
-        // ======================================
-   for (let i = 0; i < 9; i++) {
-    const debugAnchor = mindarThree.addAnchor(i);
-    
-    debugAnchor.onTargetFound = () => {
-        console.log(`🔥 ¡DIAGNÓSTICO! Se detectó la imagen número: ${i}`);
-        console.log(`   (Esta imagen corresponde a la pestaña 'Image ${i+1}' del compilador)`);
         
-        // Alerta visual temporal para que sepas que funciona
-        updateStatus(`DEBUG: Detectada img #${i}`, 'searching'); 
-    };
-}     
         // Iniciar AR
         await mindarThree.start();
-
-// === CÓDIGO DE DIAGNÓSTICO ===
-// Esto imprimirá en la consola cuántas imágenes detectó realmente el sistema
-// Accedemos al controlador interno de MindAR para verificar
-const totalTargets = mindarThree.controller.getNumTargets ? mindarThree.controller.getNumTargets() : "No disponible";
-console.log("------------------------------------------------");
-console.log(`🔍 DIAGNÓSTICO:`);
-console.log(`📦 Imágenes en el archivo .mind: ${totalTargets}`);
-console.log(`📝 Modelos en tu código: ${models3D.length}`);
-
-if (models3D.length > totalTargets) {
-    console.error("❌ ERROR: Tienes más modelos definidos en JS que imágenes en el archivo .mind");
-    console.warn("SOLUCIÓN: Vuelve a compilar el archivo .mind asegurándote de subir TODAS las imágenes juntas.");
-} else {
-    console.log("✅ La cantidad de imágenes coincide.");
-}
-console.log("------------------------------------------------");
-
         updateStatus('AR activo - Apunta a un marcador', 'active');
         isARStarted = true;
         
         // Loop de renderizado
         renderer.setAnimationLoop(() => {
-            // Nota: currentObject se actualiza automáticamente en onTargetFound
             if (currentObject && currentAnchor && currentAnchor.visible) {
-                // Si está animando, rotar automáticamente
                 if (isAnimating) {
                     manualRotation += 0.02;
                 }
-                // Aplicar rotación (manual + automática)
                 currentObject.rotation.y = manualRotation;
             }
             renderer.render(scene, camera);
@@ -218,59 +176,65 @@ console.log("------------------------------------------------");
 function createModel(modelData) {
     let geometry, material, mesh;
     
-    // TRUCO 1: Usamos MeshBasicMaterial en lugar de Standard.
-    // Este material NO necesita luces, brilla con su propio color.
-    // Así descartamos problemas de iluminación.
     const baseMaterial = new THREE.MeshBasicMaterial({
         color: modelData.color,
         transparent: true,
         opacity: 0.9,
     });
 
-    // Geometrías (sin cambios, solo agregando los faltantes)
     switch(modelData.type) {
         case 'sphere':
             geometry = new THREE.SphereGeometry(modelData.scale, 32, 32);
-            break; 
+            material = baseMaterial;
+            break;
+            
         case 'cone':
             geometry = new THREE.ConeGeometry(modelData.scale * 0.5, modelData.scale * 1.5, 32);
+            material = baseMaterial;
             break;
+            
         case 'box':
             geometry = new THREE.BoxGeometry(modelData.scale, modelData.scale, modelData.scale);
+            material = baseMaterial;
             break;
+            
         case 'cylinder':
-            geometry = new THREE.CylinderGeometry(modelData.scale * 0.5, modelData.scale * 0.5, modelData.scale * 1.2, 32);
+            geometry = new THREE.CylinderGeometry(modelData.scale * 0.4, modelData.scale * 0.4, modelData.scale * 1.2, 32);
+            material = baseMaterial;
             break;
+            
         case 'torus':
-            geometry = new THREE.TorusGeometry(modelData.scale * 0.6, modelData.scale * 0.2, 16, 50);
+            geometry = new THREE.TorusGeometry(modelData.scale, modelData.scale * 0.3, 16, 100);
+            material = baseMaterial;
             break;
+            
         case 'icosahedron':
             geometry = new THREE.IcosahedronGeometry(modelData.scale, 0);
+            material = baseMaterial;
             break;
+            
+        case 'capsule':
+            geometry = new THREE.CapsuleGeometry(modelData.scale * 0.3, modelData.scale * 0.8, 4, 8);
+            material = baseMaterial;
+            break;
+            
         case 'dodecahedron':
             geometry = new THREE.DodecahedronGeometry(modelData.scale, 0);
+            material = baseMaterial;
             break;
+            
         case 'octahedron':
             geometry = new THREE.OctahedronGeometry(modelData.scale, 0);
+            material = baseMaterial;
             break;
+            
         default:
             geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+            material = baseMaterial;
     }
-    
-    // Clonamos el material para que cada figura tenga su propio color
-    material = baseMaterial.clone();
-    material.color.setHex(modelData.color);
-    
-    // TRUCO 2: Wireframe (Malla de alambre) opcional
-    // Si descomentas la siguiente línea, verás la estructura del objeto. Ayuda mucho a depurar.
-    // material.wireframe = true;
 
     mesh = new THREE.Mesh(geometry, material);
-    
-    // TRUCO 3: POSICIÓN Z (CRUCIAL)
-    // Levantamos el objeto 0.5 unidades sobre la imagen para que no quede "enterrado"
-    // El eje Z sale perpendicular de la imagen hacia la cámara.
-    mesh.position.set(0, 0, 0.3); 
+    mesh.position.set(0, 0, 0.3);
     
     return mesh;
 }
@@ -287,7 +251,7 @@ function rotateModel(direction) {
         manualRotation += rotationAmount;
     }
     
-    console.log(`Rotando modelo: ${direction}, rotación actual: ${(manualRotation * 180 / Math.PI).toFixed(1)}°`);
+    console.log(`Rotando: ${direction}, ángulo: ${(manualRotation * 180 / Math.PI).toFixed(1)}°`);
 }
 
 // ===== TOGGLE ANIMACIÓN =====
@@ -378,13 +342,12 @@ function stopAR() {
         mindarThree = null;
         isARStarted = false;
 
-        // Limpieza del DOM para evitar conflictos al reiniciar
         const container = document.getElementById('container');
         if (container) container.innerHTML = '';
     }
 }
 
-// ===== NAVIGATION FUNCTIONALITY =====
+// ===== NAVEGACIÓN =====
 const navLinks = document.querySelectorAll('.nav-link');
 const homePage = document.getElementById('homePage');
 const galleryPage = document.getElementById('galleryPage');
@@ -411,17 +374,15 @@ navLinks.forEach(link => {
     });
 });
 
-// ===== CONTROL BUTTONS =====
+// ===== BOTONES DE CONTROL =====
 const prevBtn = document.getElementById('prevBtn');
 const playBtn = document.getElementById('playBtn');
 const nextBtn = document.getElementById('nextBtn');
 
-// Botón Anterior: Rotar a la izquierda
 prevBtn.addEventListener('click', () => {
     rotateModel('left');
 });
 
-// Botón Play/Pause: Controlar animación
 playBtn.addEventListener('click', () => {
     toggleAnimation();
     const icon = playBtn.querySelector('i');
@@ -435,12 +396,11 @@ playBtn.addEventListener('click', () => {
     }
 });
 
-// Botón Siguiente: Rotar a la derecha
 nextBtn.addEventListener('click', () => {
     rotateModel('right');
 });
 
-// ===== TRIVIA FUNCTIONALITY =====
+// ===== TRIVIA =====
 const triviaQuestions = [
     "¿Cuál es el diámetro oficial de un balón de fútbol profesional?",
     "¿En qué año se celebró el primer Mundial de Fútbol?",
@@ -457,6 +417,7 @@ const triviaPrev = document.getElementById('triviaPrev');
 const triviaNext = document.getElementById('triviaNext');
 
 totalQSpan.textContent = triviaQuestions.length;
+triviaQuestion.style.transition = 'opacity 0.3s ease';
 
 function updateTrivia() {
     triviaQuestion.style.opacity = '0';
@@ -466,8 +427,6 @@ function updateTrivia() {
         triviaQuestion.style.opacity = '1';
     }, 200);
 }
-
-triviaQuestion.style.transition = 'opacity 0.3s ease';
 
 triviaPrev.addEventListener('click', () => {
     if (currentQuestion > 0) {
@@ -485,8 +444,7 @@ triviaNext.addEventListener('click', () => {
 
 // ===== INICIALIZAR AL CARGAR =====
 window.addEventListener('load', () => {
-    console.log('Aplicación AR cargada');
-    // Solo inicia si estamos en la home
+    console.log('✅ Aplicación AR cargada');
     if(homePage.style.display !== 'none'){
         initAR();
     }
