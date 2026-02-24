@@ -73,7 +73,6 @@
                     
                     <div class="col-lg-4">
                         
-                        <!-- Trivia Card NUEVA ESTRUCTURA -->
                         <div class="info-card trivia-card">
                             <div class="trivia-header">
                                 <h3>Datos clave:</h3>
@@ -84,10 +83,8 @@
                                 ¿Cuál es el diámetro oficial de un balón de fútbol profesional?
                             </div>
                             
-                            <!-- Contenedor para las 4 opciones de respuesta -->
                             <div class="trivia-options" id="triviaOptions">
-                                <!-- Los botones se generan dinámicamente con JavaScript -->
-                            </div>
+                                </div>
                             
                             <div class="trivia-controls">
                                 <button class="trivia-btn" id="triviaPrev">
@@ -114,38 +111,92 @@
                 </div>
             </div>
             
-            <div class="gallery-page" id="galleryPage">
+            <div class="gallery-page" id="galleryPage" style="display: none;">
                 <h2 class="text-center mb-4" style="font-family: 'Orbitron', sans-serif; font-size: 2.5rem; text-transform: uppercase; letter-spacing: 2px;">
-                    Galería de contenidos
+                    Galería de Contenidos
                 </h2>
-                <div class="gallery-grid">
-                    <div class="gallery-item">
-                        <div class="gallery-item-image">
-                            <i class="fas fa-futbol" style="font-size: 4rem; color: rgba(0,0,0,0.3);"></i>
+                
+                <div class="row g-4">
+                    <div class="col-lg-8">
+                        <div class="video-player-container mb-4">
+                            <div class="ratio ratio-16x9">
+                                <div class="d-flex flex-column align-items-center justify-content-center text-white w-100 h-100" style="background: rgba(0,0,0,0.6);">
+                                    <i class="fas fa-play-circle mb-3" style="font-size: 5rem; color: var(--neon-cyan); opacity: 0.8;"></i>
+                                    <h4 style="font-family: 'Orbitron', sans-serif;">Reproductor de Video</h4>
+                                </div>
+                            </div>
                         </div>
-                        <h4>Balón de Fútbol</h4>
-                        <p>Modelo oficial FIFA</p>
+                        
+                        <div class="d-flex justify-content-between gap-2 filter-container">
+                            <button class="trivia-option-btn correct flex-fill text-center m-0">Sin filtro</button>
+                            <button class="trivia-option-btn flex-fill text-center m-0">Filtro 1</button>
+                            <button class="trivia-option-btn flex-fill text-center m-0">Filtro 2</button>
+                            <button class="trivia-option-btn flex-fill text-center m-0">Filtro 3</button>
+                            <button class="trivia-option-btn flex-fill text-center m-0">Filtro 4</button>
+                        </div>
                     </div>
-                    <div class="gallery-item">
-                        <div class="gallery-item-image">
-                            <i class="fas fa-running" style="font-size: 4rem; color: rgba(0,0,0,0.3);"></i>
+
+                    <div class="col-lg-4">
+                        <div class="info-card h-100 m-0" style="padding: 1.5rem;">
+                            <h3 style="font-size: 1.2rem; margin-bottom: 1.5rem;">Seleccione un video</h3>
+                            
+                            <div class="video-scroll-area">
+                                <div class="video-list-item d-flex gap-3 mb-3">
+                                    <div class="video-thumbnail">
+                                        <i class="fas fa-futbol" style="font-size: 1.5rem; color: rgba(0,0,0,0.3);"></i>
+                                    </div>
+                                    <div class="video-info flex-grow-1">
+                                        <h5 class="video-title">Historia del Balón Oficial</h5>
+                                        <p class="video-meta">Hace 2 días • 15K vistas</p>
+                                    </div>
+                                    <i class="fas fa-ellipsis-v mt-1 text-muted"></i>
+                                </div>
+                                
+                                <div class="video-list-item d-flex gap-3 mb-3">
+                                    <div class="video-thumbnail">
+                                        <i class="fas fa-running" style="font-size: 1.5rem; color: rgba(0,0,0,0.3);"></i>
+                                    </div>
+                                    <div class="video-info flex-grow-1">
+                                        <h5 class="video-title">Mejores Jugadas 2023</h5>
+                                        <p class="video-meta">Hace 1 semana • 42K vistas</p>
+                                    </div>
+                                    <i class="fas fa-ellipsis-v mt-1 text-muted"></i>
+                                </div>
+                                
+                                <div class="video-list-item d-flex gap-3 mb-3">
+                                    <div class="video-thumbnail">
+                                        <i class="fas fa-trophy" style="font-size: 1.5rem; color: rgba(0,0,0,0.3);"></i>
+                                    </div>
+                                    <div class="video-info flex-grow-1">
+                                        <h5 class="video-title">Ceremonia de Campeones</h5>
+                                        <p class="video-meta">Hace 1 mes • 105K vistas</p>
+                                    </div>
+                                    <i class="fas fa-ellipsis-v mt-1 text-muted"></i>
+                                </div>
+
+                                <div class="video-list-item d-flex gap-3 mb-3">
+                                    <div class="video-thumbnail">
+                                        <i class="fas fa-flag" style="font-size: 1.5rem; color: rgba(0,0,0,0.3);"></i>
+                                    </div>
+                                    <div class="video-info flex-grow-1">
+                                        <h5 class="video-title">Tour por el Estadio 360°</h5>
+                                        <p class="video-meta">Hace 2 meses • 8K vistas</p>
+                                    </div>
+                                    <i class="fas fa-ellipsis-v mt-1 text-muted"></i>
+                                </div>
+
+                                <div class="video-list-item d-flex gap-3 mb-3">
+                                    <div class="video-thumbnail">
+                                        <i class="fas fa-stopwatch" style="font-size: 1.5rem; color: rgba(0,0,0,0.3);"></i>
+                                    </div>
+                                    <div class="video-info flex-grow-1">
+                                        <h5 class="video-title">Reglas del Tiempo Extra</h5>
+                                        <p class="video-meta">Hace 3 meses • 12K vistas</p>
+                                    </div>
+                                    <i class="fas fa-ellipsis-v mt-1 text-muted"></i>
+                                </div>
+                            </div>
                         </div>
-                        <h4>Jugador</h4>
-                        <p>Animación de movimientos</p>
-                    </div>
-                    <div class="gallery-item">
-                        <div class="gallery-item-image">
-                            <i class="fas fa-trophy" style="font-size: 4rem; color: rgba(0,0,0,0.3);"></i>
-                        </div>
-                        <h4>Trofeo</h4>
-                        <p>Copa del campeonato</p>
-                    </div>
-                    <div class="gallery-item">
-                        <div class="gallery-item-image">
-                            <i class="fas fa-flag" style="font-size: 4rem; color: rgba(0,0,0,0.3);"></i>
-                        </div>
-                        <h4>Estadio</h4>
-                        <p>Vista panorámica 360°</p>
                     </div>
                 </div>
             </div>
