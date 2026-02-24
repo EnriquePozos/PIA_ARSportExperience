@@ -3,7 +3,6 @@ import { MindARThree } from 'mindar-image-three';
 
 // ===== CONFIGURACIÓN DE MODELOS 3D (9 ITEMS) =====
 const models3D = [
-    // Index 0
     {
         id: 'ball',
         name: 'Balón de Fútbol',
@@ -12,7 +11,6 @@ const models3D = [
         color: 0xFFFFFF,
         scale: 0.5
     },
-    // Index 1
     {
         id: 'trophy',
         name: 'Trofeo de Campeonato',
@@ -21,7 +19,6 @@ const models3D = [
         color: 0xFFD700,
         scale: 0.6
     },
-    // Index 2
     {
         id: 'cube',
         name: 'Cubo Deportivo',
@@ -30,7 +27,6 @@ const models3D = [
         color: 0xFF3377,
         scale: 0.5
     },
-    // Index 3
     {
         id: 'cylinder',
         name: 'Torre de Control',
@@ -39,7 +35,6 @@ const models3D = [
         color: 0x00FF00,
         scale: 0.6
     },
-    // Index 4
     {
         id: 'torus',
         name: 'Anillo Olímpico',
@@ -48,7 +43,6 @@ const models3D = [
         color: 0x00FFFF,
         scale: 0.4
     },
-    // Index 5
     {
         id: 'icosahedron',
         name: 'Diamante',
@@ -57,7 +51,6 @@ const models3D = [
         color: 0x9D00FF,
         scale: 0.5
     },
-    // Index 6
     {
         id: 'capsule',
         name: 'Cápsula del Tiempo',
@@ -66,7 +59,6 @@ const models3D = [
         color: 0xFF8800,
         scale: 0.5
     },
-    // Index 7
     {
         id: 'dodecahedron',
         name: 'Balón Poligonal',
@@ -75,7 +67,6 @@ const models3D = [
         color: 0xFF0055,
         scale: 0.55
     },
-    // Index 8
     {
         id: 'octahedron',
         name: 'Pirámide Doble',
@@ -83,6 +74,85 @@ const models3D = [
         type: 'octahedron',
         color: 0x0000FF,
         scale: 0.6
+    }
+];
+
+// ===== CONFIGURACIÓN DE TRIVIA (15 PREGUNTAS) =====
+const triviaQuestions = [
+    {
+        question: "¿Cuál es el diámetro oficial de un balón de fútbol profesional?",
+        options: ["68-70 cm", "60-62 cm", "72-74 cm", "65-67 cm"],
+        correct: 0
+    },
+    {
+        question: "¿En qué año se celebró el primer Mundial de Fútbol?",
+        options: ["1928", "1930", "1934", "1926"],
+        correct: 1
+    },
+    {
+        question: "¿Cuántos jugadores conforman un equipo de fútbol en el campo?",
+        options: ["9 jugadores", "10 jugadores", "11 jugadores", "12 jugadores"],
+        correct: 2
+    },
+    {
+        question: "¿Cuál es la duración oficial de un partido de fútbol?",
+        options: ["80 minutos", "90 minutos", "100 minutos", "120 minutos"],
+        correct: 1
+    },
+    {
+        question: "¿Quién es considerado el máximo goleador en la historia del fútbol?",
+        options: ["Pelé", "Lionel Messi", "Cristiano Ronaldo", "Josef Bican"],
+        correct: 3
+    },
+    {
+        question: "¿Qué país ha ganado más Copas del Mundo?",
+        options: ["Alemania", "Argentina", "Brasil", "Italia"],
+        correct: 2
+    },
+    {
+        question: "¿En qué año se fundó la FIFA?",
+        options: ["1900", "1904", "1910", "1920"],
+        correct: 1
+    },
+    {
+        question: "¿Cuánto mide un campo de fútbol profesional de largo?",
+        options: ["90-120 metros", "100-110 metros", "80-100 metros", "110-120 metros"],
+        correct: 1
+    },
+    {
+        question: "¿Qué jugador tiene el récord de más goles en un Mundial?",
+        options: ["Ronaldo", "Miroslav Klose", "Pelé", "Gerd Müller"],
+        correct: 1
+    },
+    {
+        question: "¿Cuál es el tiempo de un medio tiempo en el fútbol?",
+        options: ["40 minutos", "45 minutos", "50 minutos", "60 minutos"],
+        correct: 1
+    },
+    {
+        question: "¿Qué país organizó el primer Mundial de Fútbol?",
+        options: ["Brasil", "Argentina", "Uruguay", "Italia"],
+        correct: 2
+    },
+    {
+        question: "¿Cuántos cambios se permiten en un partido oficial de fútbol?",
+        options: ["3 cambios", "5 cambios", "7 cambios", "Sin límite"],
+        correct: 1
+    },
+    {
+        question: "¿Qué color de tarjeta expulsa directamente a un jugador?",
+        options: ["Amarilla", "Roja", "Verde", "Azul"],
+        correct: 1
+    },
+    {
+        question: "¿Cuántos pentágonos tiene un balón de fútbol tradicional?",
+        options: ["10", "12", "15", "20"],
+        correct: 1
+    },
+    {
+        question: "¿En qué año se introdujo el VAR en el fútbol?",
+        options: ["2014", "2016", "2018", "2020"],
+        correct: 2
     }
 ];
 
@@ -94,33 +164,32 @@ let currentAnchor = null;
 let isAnimating = false;
 let manualRotation = 0;
 
+// Variables de trivia
+let currentQuestion = 0;
+let correctAnswers = 0;
+let answeredQuestions = new Set();
+
 // ===== INICIALIZACIÓN DE MIND AR =====
 async function initAR() {
     const container = document.getElementById('container');
     const arStatus = document.getElementById('arStatus');
     
-    // Limpieza: Evita duplicados si se reinicia la app
     if(container) container.innerHTML = '';
 
     try {
         updateStatus('Iniciando cámara AR...', 'loading');
         
-        // Crear instancia de MindAR CON UI DESACTIVADO
         mindarThree = new MindARThree({
             container: container,
             imageTargetSrc: './banderas.mind',
-            // ⭐ CLAVE: Desactivar el UI por defecto de MindAR
             uiLoading: "no",
             uiScanning: "no", 
             uiError: "no"
         });
         
         const { renderer, scene, camera } = mindarThree;
-        
-        // Fondo transparente para que se vea la cámara
         renderer.setClearColor(0x000000, 0);
         
-        // Configurar luces
         const ambientLight = new THREE.AmbientLight(0xffffff, 1);
         scene.add(ambientLight);
         
@@ -128,7 +197,6 @@ async function initAR() {
         directionalLight.position.set(0, 5, 5);
         scene.add(directionalLight);
         
-        // Crear un anchor y modelo por cada imagen
         models3D.forEach((item, index) => {
             const anchor = mindarThree.addAnchor(index);
             const mesh = createModel(item);
@@ -149,12 +217,10 @@ async function initAR() {
             };
         });
         
-        // Iniciar AR
         await mindarThree.start();
         updateStatus('AR activo - Apunta a un marcador', 'active');
         isARStarted = true;
         
-        // Loop de renderizado
         renderer.setAnimationLoop(() => {
             if (currentObject && currentAnchor && currentAnchor.visible) {
                 if (isAnimating) {
@@ -187,47 +253,38 @@ function createModel(modelData) {
             geometry = new THREE.SphereGeometry(modelData.scale, 32, 32);
             material = baseMaterial;
             break;
-            
         case 'cone':
             geometry = new THREE.ConeGeometry(modelData.scale * 0.5, modelData.scale * 1.5, 32);
             material = baseMaterial;
             break;
-            
         case 'box':
             geometry = new THREE.BoxGeometry(modelData.scale, modelData.scale, modelData.scale);
             material = baseMaterial;
             break;
-            
         case 'cylinder':
             geometry = new THREE.CylinderGeometry(modelData.scale * 0.4, modelData.scale * 0.4, modelData.scale * 1.2, 32);
             material = baseMaterial;
             break;
-            
         case 'torus':
             geometry = new THREE.TorusGeometry(modelData.scale, modelData.scale * 0.3, 16, 100);
             material = baseMaterial;
             break;
-            
         case 'icosahedron':
             geometry = new THREE.IcosahedronGeometry(modelData.scale, 0);
             material = baseMaterial;
             break;
-            
         case 'capsule':
             geometry = new THREE.CapsuleGeometry(modelData.scale * 0.3, modelData.scale * 0.8, 4, 8);
             material = baseMaterial;
             break;
-            
         case 'dodecahedron':
             geometry = new THREE.DodecahedronGeometry(modelData.scale, 0);
             material = baseMaterial;
             break;
-            
         case 'octahedron':
             geometry = new THREE.OctahedronGeometry(modelData.scale, 0);
             material = baseMaterial;
             break;
-            
         default:
             geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
             material = baseMaterial;
@@ -243,21 +300,18 @@ function createModel(modelData) {
 function rotateModel(direction) {
     if (!isARStarted || !currentObject) return;
     
-    const rotationAmount = Math.PI / 8; // 22.5 grados
+    const rotationAmount = Math.PI / 8;
     
     if (direction === 'left') {
         manualRotation -= rotationAmount;
     } else if (direction === 'right') {
         manualRotation += rotationAmount;
     }
-    
-    console.log(`Rotando: ${direction}, ángulo: ${(manualRotation * 180 / Math.PI).toFixed(1)}°`);
 }
 
 // ===== TOGGLE ANIMACIÓN =====
 function toggleAnimation() {
     isAnimating = !isAnimating;
-    console.log(`Animación ${isAnimating ? 'activada' : 'pausada'}`);
 }
 
 // ===== ACTUALIZAR UI =====
@@ -317,13 +371,6 @@ function showARError(errorMessage = '') {
                 <i class="fas fa-exclamation-triangle" style="font-size: 4rem; margin-bottom: 1rem; color: #ff3377;"></i>
                 <h3 style="font-family: 'Orbitron', sans-serif; margin-bottom: 1rem;">No se pudo iniciar AR</h3>
                 ${errorMessage ? `<p style="color: #ff8888; margin-bottom: 1rem; font-family: monospace; font-size: 0.9rem;">${errorMessage}</p>` : ''}
-                <p style="margin-bottom: 1rem;">Posibles causas:</p>
-                <ul style="text-align: left; max-width: 400px; margin: 0 auto 1.5rem;">
-                    <li>Permisos de cámara no otorgados</li>
-                    <li>Conexión a internet requerida</li>
-                    <li>Navegador no compatible (usa Chrome o Safari)</li>
-                    <li>Las librerías no se cargaron correctamente</li>
-                </ul>
                 <button onclick="location.reload()" class="trivia-btn" style="margin-top: 1.5rem; padding: 0.8rem 2rem;">
                     <i class="fas fa-redo"></i> Reintentar
                 </button>
@@ -341,7 +388,6 @@ function stopAR() {
         }
         mindarThree = null;
         isARStarted = false;
-
         const container = document.getElementById('container');
         if (container) container.innerHTML = '';
     }
@@ -355,7 +401,6 @@ const galleryPage = document.getElementById('galleryPage');
 navLinks.forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
-        
         navLinks.forEach(l => l.classList.remove('active'));
         link.classList.add('active');
         
@@ -363,9 +408,7 @@ navLinks.forEach(link => {
         if (page === 'home') {
             homePage.style.display = 'block';
             galleryPage.style.display = 'none';
-            if (!isARStarted) {
-                initAR();
-            }
+            if (!isARStarted) initAR();
         } else if (page === 'gallery') {
             homePage.style.display = 'none';
             galleryPage.style.display = 'block';
@@ -374,19 +417,12 @@ navLinks.forEach(link => {
     });
 });
 
-// ===== BOTONES DE CONTROL =====
-const prevBtn = document.getElementById('prevBtn');
-const playBtn = document.getElementById('playBtn');
-const nextBtn = document.getElementById('nextBtn');
-
-prevBtn.addEventListener('click', () => {
-    rotateModel('left');
-});
-
-playBtn.addEventListener('click', () => {
+// ===== BOTONES DE CONTROL AR =====
+document.getElementById('prevBtn').addEventListener('click', () => rotateModel('left'));
+document.getElementById('nextBtn').addEventListener('click', () => rotateModel('right'));
+document.getElementById('playBtn').addEventListener('click', () => {
     toggleAnimation();
-    const icon = playBtn.querySelector('i');
-    
+    const icon = document.getElementById('playBtn').querySelector('i');
     if (isAnimating) {
         icon.classList.remove('fa-play');
         icon.classList.add('fa-pause');
@@ -396,56 +432,99 @@ playBtn.addEventListener('click', () => {
     }
 });
 
-nextBtn.addEventListener('click', () => {
-    rotateModel('right');
-});
-
-// ===== TRIVIA =====
-const triviaQuestions = [
-    "¿Cuál es el diámetro oficial de un balón de fútbol profesional?",
-    "¿En qué año se celebró el primer Mundial de Fútbol?",
-    "¿Cuántos jugadores conforman un equipo de fútbol en el campo?",
-    "¿Cuál es la duración oficial de un partido de fútbol?",
-    "¿Quién es considerado el máximo goleador en la historia del fútbol?"
-];
-
-let currentQuestion = 0;
+// ===== SISTEMA DE TRIVIA =====
 const triviaQuestion = document.getElementById('triviaQuestion');
+const triviaOptions = document.getElementById('triviaOptions');
 const currentQSpan = document.getElementById('currentQ');
 const totalQSpan = document.getElementById('totalQ');
 const triviaPrev = document.getElementById('triviaPrev');
 const triviaNext = document.getElementById('triviaNext');
+const triviaScore = document.getElementById('triviaScore');
 
 totalQSpan.textContent = triviaQuestions.length;
-triviaQuestion.style.transition = 'opacity 0.3s ease';
 
-function updateTrivia() {
-    triviaQuestion.style.opacity = '0';
-    setTimeout(() => {
-        triviaQuestion.textContent = triviaQuestions[currentQuestion];
-        currentQSpan.textContent = currentQuestion + 1;
-        triviaQuestion.style.opacity = '1';
-    }, 200);
+// Cargar pregunta
+function loadQuestion() {
+    const question = triviaQuestions[currentQuestion];
+    
+    triviaQuestion.textContent = question.question;
+    currentQSpan.textContent = currentQuestion + 1;
+    updateScore();
+    
+    triviaOptions.innerHTML = '';
+    const wasAnswered = answeredQuestions.has(currentQuestion);
+    
+    question.options.forEach((option, index) => {
+        const button = document.createElement('button');
+        button.className = 'trivia-option-btn';
+        button.textContent = option;
+        
+        if (wasAnswered) {
+            button.disabled = true;
+            if (index === question.correct) {
+                button.classList.add('correct');
+            } else {
+                button.classList.add('disabled');
+            }
+        } else {
+            button.addEventListener('click', () => checkAnswer(index, button));
+        }
+        
+        triviaOptions.appendChild(button);
+    });
 }
 
+// Verificar respuesta
+function checkAnswer(selectedIndex, button) {
+    const question = triviaQuestions[currentQuestion];
+    const allButtons = triviaOptions.querySelectorAll('.trivia-option-btn');
+    
+    answeredQuestions.add(currentQuestion);
+    allButtons.forEach(btn => btn.disabled = true);
+    
+    if (selectedIndex === question.correct) {
+        button.classList.add('correct');
+        correctAnswers++;
+    } else {
+        button.classList.add('incorrect');
+        allButtons[question.correct].classList.add('correct');
+    }
+    
+    updateScore();
+    
+    // Auto-avanzar después de 1.5 segundos
+    setTimeout(() => {
+        if (currentQuestion < triviaQuestions.length - 1) {
+            currentQuestion++;
+            loadQuestion();
+        }
+    }, 1500);
+}
+
+// Actualizar puntuación
+function updateScore() {
+    const answered = answeredQuestions.size;
+    triviaScore.textContent = `${correctAnswers}/${answered} correctas`;
+}
+
+// Navegar preguntas
 triviaPrev.addEventListener('click', () => {
     if (currentQuestion > 0) {
         currentQuestion--;
-        updateTrivia();
+        loadQuestion();
     }
 });
 
 triviaNext.addEventListener('click', () => {
     if (currentQuestion < triviaQuestions.length - 1) {
         currentQuestion++;
-        updateTrivia();
+        loadQuestion();
     }
 });
 
 // ===== INICIALIZAR AL CARGAR =====
 window.addEventListener('load', () => {
     console.log('✅ Aplicación AR cargada');
-    if(homePage.style.display !== 'none'){
-        initAR();
-    }
+    loadQuestion();
+    if(homePage.style.display !== 'none') initAR();
 });

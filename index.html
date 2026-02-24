@@ -73,17 +73,28 @@
                     
                     <div class="col-lg-4">
                         
+                        <!-- Trivia Card NUEVA ESTRUCTURA -->
                         <div class="info-card trivia-card">
-                            <h3>Datos clave:</h3>
+                            <div class="trivia-header">
+                                <h3>Datos clave:</h3>
+                                <div class="trivia-score" id="triviaScore">0/0 correctas</div>
+                            </div>
+                            
                             <div class="trivia-question" id="triviaQuestion">
                                 ¿Cuál es el diámetro oficial de un balón de fútbol profesional?
                             </div>
+                            
+                            <!-- Contenedor para las 4 opciones de respuesta -->
+                            <div class="trivia-options" id="triviaOptions">
+                                <!-- Los botones se generan dinámicamente con JavaScript -->
+                            </div>
+                            
                             <div class="trivia-controls">
                                 <button class="trivia-btn" id="triviaPrev">
                                     <i class="fas fa-arrow-left"></i> Anterior
                                 </button>
                                 <span class="trivia-indicator">
-                                    <span id="currentQ">1</span> / <span id="totalQ">5</span>
+                                    <span id="currentQ">1</span> / <span id="totalQ">15</span>
                                 </span>
                                 <button class="trivia-btn" id="triviaNext">
                                     Siguiente <i class="fas fa-arrow-right"></i>
