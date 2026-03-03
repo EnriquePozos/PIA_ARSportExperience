@@ -29,7 +29,10 @@
                             <a class="nav-link" href="#" data-page="gallery">Galería</a>
                         </li>
                     </ul>
-                    <!-- Botón de estadísticas -->
+                    <!-- Botones de ayuda y estadísticas -->
+                    <button class="help-btn" id="helpBtn" title="Tutorial de Ayuda">
+                        <i class="fas fa-question"></i>
+                    </button>
                     <button class="stats-btn" id="statsBtn" title="Ver Estadísticas">
                         <i class="fas fa-chart-bar"></i>
                     </button>
@@ -223,6 +226,39 @@
             
             <div class="stats-modal-body" id="statsModalBody">
                 <!-- El contenido se genera dinámicamente con JavaScript -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tutorial/Tour Guiado -->
+    <div class="tutorial-overlay" id="tutorialOverlay">
+        <div class="tutorial-spotlight" id="tutorialSpotlight"></div>
+        
+        <div class="tutorial-tooltip" id="tutorialTooltip">
+            <div class="tutorial-header">
+                <span class="tutorial-progress" id="tutorialProgress">Paso 1/7</span>
+                <button class="tutorial-skip" id="tutorialSkip">
+                    <i class="fas fa-times"></i> Saltar
+                </button>
+            </div>
+            
+            <div class="tutorial-content">
+                <div class="tutorial-icon" id="tutorialIcon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <h3 id="tutorialTitle">¡Bienvenido a AR Sports!</h3>
+                <p id="tutorialDescription">
+                    Esta es una aplicación de Realidad Aumentada para explorar el mundo del fútbol.
+                </p>
+            </div>
+            
+            <div class="tutorial-footer">
+                <button class="tutorial-btn tutorial-btn-secondary" id="tutorialPrev" disabled>
+                    <i class="fas fa-arrow-left"></i> Anterior
+                </button>
+                <button class="tutorial-btn tutorial-btn-primary" id="tutorialNext">
+                    Siguiente <i class="fas fa-arrow-right"></i>
+                </button>
             </div>
         </div>
     </div>

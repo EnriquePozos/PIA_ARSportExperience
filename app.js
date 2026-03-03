@@ -722,9 +722,245 @@ function renderStatsContent() {
     statsModalBody.innerHTML = html;
 }
 
+// ===== SISTEMA DE TUTORIAL =====
+
+// Pasos del tutorial
+const tutorialSteps = [
+    {
+        id: 'welcome',
+        target: null, // Sin elemento específico
+        title: '¡Bienvenido a AR Sports!',
+        description: 'Esta aplicación te permite explorar el mundo del fútbol con Realidad Aumentada. Te mostraremos cómo usarla.',
+        icon: 'fa-rocket',
+        position: 'center'
+    },
+    {
+        id: 'ar-canvas',
+        target: '#arCanvas',
+        title: 'Visor de Realidad Aumentada',
+        description: 'Apunta tu cámara a un marcador para ver objetos 3D flotando en el espacio real. Los objetos aparecerán automáticamente.',
+        icon: 'fa-camera',
+        position: 'top'
+    },
+    {
+        id: 'controls',
+        target: '.controls',
+        title: 'Controles 3D',
+        description: 'Usa los botones izquierdo/derecho para rotar el modelo. El botón central activa la rotación automática.',
+        icon: 'fa-gamepad',
+        position: 'top'
+    },
+    {
+        id: 'trivia',
+        target: '.trivia-card',
+        title: 'Trivia Interactiva',
+        description: 'Responde preguntas sobre fútbol. Selecciona una respuesta y descubre si es correcta. ¡Acumula puntos!',
+        icon: 'fa-brain',
+        position: 'left'
+    },
+    {
+        id: 'scan-info',
+        target: '.scan-info',
+        title: 'Información del Objeto',
+        description: 'Cuando detectes un marcador, aquí verás información detallada sobre el objeto 3D que estás visualizando.',
+        icon: 'fa-info-circle',
+        position: 'left'
+    },
+    {
+        id: 'gallery',
+        target: '[data-page="gallery"]',
+        title: 'Galería de Videos',
+        description: 'Accede a una colección de videos deportivos. Explora contenido multimedia relacionado con el fútbol.',
+        icon: 'fa-video',
+        position: 'bottom'
+    },
+    {
+        id: 'stats',
+        target: '#statsBtn',
+        title: 'Estadísticas Mundiales',
+        description: '¡Haz clic aquí para ver ranking FIFA, goleadores históricos y datos de selecciones! ¡Ya estás listo para usar la app!',
+        icon: 'fa-chart-bar',
+        position: 'bottom'
+    }
+];
+
+// Variables del tutorial
+let currentTutorialStep = 0;
+const tutorialOverlay = document.getElementById('tutorialOverlay');
+const tutorialSpotlight = document.getElementById('tutorialSpotlight');
+const tutorialTooltip = document.getElementById('tutorialTooltip');
+const tutorialProgress = document.getElementById('tutorialProgress');
+const tutorialTitle = document.getElementById('tutorialTitle');
+const tutorialDescription = document.getElementById('tutorialDescription');
+const tutorialIcon = document.getElementById('tutorialIcon');
+const tutorialPrev = document.getElementById('tutorialPrev');
+const tutorialNext = document.getElementById('tutorialNext');
+const tutorialSkip = document.getElementById('tutorialSkip');
+const helpBtn = document.getElementById('helpBtn');
+
+// Verificar si es la primera vez
+function checkFirstTime() {
+    const hasSeenTutorial = localStorage.getItem('hasSeenTutorial');
+    if (!hasSeenTutorial) {
+        // Esperar a que todo cargue
+        setTimeout(() => {
+            startTutorial();
+        }, 1000);
+    }
+}
+
+// Iniciar tutorial
+function startTutorial() {
+    currentTutorialStep = 0;
+    tutorialOverlay.classList.add('active');
+    showTutorialStep(currentTutorialStep);
+}
+
+// Mostrar paso del tutorial
+function showTutorialStep(stepIndex) {
+    const step = tutorialSteps[stepIndex];
+    
+    // Actualizar progreso
+    tutorialProgress.textContent = `Paso ${stepIndex + 1}/${tutorialSteps.length}`;
+    
+    // Actualizar contenido
+    tutorialTitle.textContent = step.title;
+    tutorialDescription.textContent = step.description;
+    tutorialIcon.innerHTML = `<i class="fas ${step.icon}"></i>`;
+    
+    // Actualizar botones
+    tutorialPrev.disabled = stepIndex === 0;
+    tutorialNext.textContent = stepIndex === tutorialSteps.length - 1 ? 'Finalizar' : 'Siguiente';
+    
+    // Posicionar spotlight y tooltip
+    if (step.target) {
+        const target = document.querySelector(step.target);
+        if (target) {
+            positionSpotlight(target);
+            positionTooltip(target, step.position);
+        }
+    } else {
+        // Sin spotlight, tooltip centrado
+        tutorialSpotlight.style.display = 'none';
+        centerTooltip();
+    }
+}
+
+// Posicionar spotlight
+function positionSpotlight(element) {
+    const rect = element.getBoundingClientRect();
+    tutorialSpotlight.style.display = 'block';
+    tutorialSpotlight.style.top = `${rect.top - 10}px`;
+    tutorialSpotlight.style.left = `${rect.left - 10}px`;
+    tutorialSpotlight.style.width = `${rect.width + 20}px`;
+    tutorialSpotlight.style.height = `${rect.height + 20}px`;
+}
+
+// Posicionar tooltip
+function positionTooltip(element, position) {
+    const rect = element.getBoundingClientRect();
+    const tooltipRect = tutorialTooltip.getBoundingClientRect();
+    
+    // Remover todas las clases de flecha
+    tutorialTooltip.classList.remove('arrow-top', 'arrow-bottom', 'arrow-left', 'arrow-right');
+    
+    let top, left;
+    
+    switch(position) {
+        case 'top':
+            top = rect.bottom + 20;
+            left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+            tutorialTooltip.classList.add('arrow-top');
+            break;
+        case 'bottom':
+            top = rect.top - tooltipRect.height - 20;
+            left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+            tutorialTooltip.classList.add('arrow-bottom');
+            break;
+        case 'left':
+            top = rect.top + (rect.height / 2) - (tooltipRect.height / 2);
+            left = rect.right + 20;
+            tutorialTooltip.classList.add('arrow-left');
+            break;
+        case 'right':
+            top = rect.top + (rect.height / 2) - (tooltipRect.height / 2);
+            left = rect.left - tooltipRect.width - 20;
+            tutorialTooltip.classList.add('arrow-right');
+            break;
+        default:
+            centerTooltip();
+            return;
+    }
+    
+    // Ajustar si se sale de la pantalla
+    if (left < 10) left = 10;
+    if (left + tooltipRect.width > window.innerWidth - 10) {
+        left = window.innerWidth - tooltipRect.width - 10;
+    }
+    if (top < 10) top = 10;
+    if (top + tooltipRect.height > window.innerHeight - 10) {
+        top = window.innerHeight - tooltipRect.height - 10;
+    }
+    
+    tutorialTooltip.style.top = `${top}px`;
+    tutorialTooltip.style.left = `${left}px`;
+}
+
+// Centrar tooltip
+function centerTooltip() {
+    tutorialTooltip.classList.remove('arrow-top', 'arrow-bottom', 'arrow-left', 'arrow-right');
+    tutorialTooltip.style.top = '50%';
+    tutorialTooltip.style.left = '50%';
+    tutorialTooltip.style.transform = 'translate(-50%, -50%)';
+}
+
+// Navegar hacia adelante
+tutorialNext.addEventListener('click', () => {
+    if (currentTutorialStep < tutorialSteps.length - 1) {
+        currentTutorialStep++;
+        showTutorialStep(currentTutorialStep);
+    } else {
+        finishTutorial();
+    }
+});
+
+// Navegar hacia atrás
+tutorialPrev.addEventListener('click', () => {
+    if (currentTutorialStep > 0) {
+        currentTutorialStep--;
+        showTutorialStep(currentTutorialStep);
+    }
+});
+
+// Saltar tutorial
+tutorialSkip.addEventListener('click', () => {
+    finishTutorial();
+});
+
+// Finalizar tutorial
+function finishTutorial() {
+    tutorialOverlay.classList.remove('active');
+    localStorage.setItem('hasSeenTutorial', 'true');
+}
+
+// Botón de ayuda para reactivar tutorial
+helpBtn.addEventListener('click', () => {
+    startTutorial();
+});
+
+// Reposicionar en resize
+window.addEventListener('resize', () => {
+    if (tutorialOverlay.classList.contains('active')) {
+        showTutorialStep(currentTutorialStep);
+    }
+});
+
 // ===== INICIALIZAR AL CARGAR =====
 window.addEventListener('load', () => {
     console.log('✅ Aplicación AR cargada');
     loadQuestion();
     if(homePage.style.display !== 'none') initAR();
+    
+    // Verificar si mostrar tutorial
+    checkFirstTime();
 });
