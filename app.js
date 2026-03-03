@@ -522,6 +522,206 @@ triviaNext.addEventListener('click', () => {
     }
 });
 
+// ===== MODAL DE ESTADÍSTICAS =====
+
+// Mock data de selecciones de fútbol
+const footballTeamsData = [
+    {
+        rank: 1,
+        name: "Argentina",
+        flag: "🇦🇷",
+        continent: "Sudamérica",
+        worldCups: 3,
+        copaAmerica: 15,
+        totalMatches: 1056,
+        wins: 593,
+        goals: 2346
+    },
+    {
+        rank: 2,
+        name: "Francia",
+        flag: "🇫🇷",
+        continent: "Europa",
+        worldCups: 2,
+        copaAmerica: 0,
+        totalMatches: 954,
+        wins: 553,
+        goals: 2145
+    },
+    {
+        rank: 3,
+        name: "Brasil",
+        flag: "🇧🇷",
+        continent: "Sudamérica",
+        worldCups: 5,
+        copaAmerica: 9,
+        totalMatches: 1120,
+        wins: 739,
+        goals: 2653
+    },
+    {
+        rank: 4,
+        name: "Inglaterra",
+        flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+        continent: "Europa",
+        worldCups: 1,
+        copaAmerica: 0,
+        totalMatches: 1024,
+        wins: 598,
+        goals: 2198
+    },
+    {
+        rank: 5,
+        name: "Bélgica",
+        flag: "🇧🇪",
+        continent: "Europa",
+        worldCups: 0,
+        copaAmerica: 0,
+        totalMatches: 812,
+        wins: 417,
+        goals: 1534
+    },
+    {
+        rank: 6,
+        name: "Países Bajos",
+        flag: "🇳🇱",
+        continent: "Europa",
+        worldCups: 0,
+        copaAmerica: 0,
+        totalMatches: 897,
+        wins: 532,
+        goals: 1956
+    },
+    {
+        rank: 7,
+        name: "Portugal",
+        flag: "🇵🇹",
+        continent: "Europa",
+        worldCups: 0,
+        copaAmerica: 0,
+        totalMatches: 782,
+        wins: 456,
+        goals: 1632
+    },
+    {
+        rank: 8,
+        name: "España",
+        flag: "🇪🇸",
+        continent: "Europa",
+        worldCups: 1,
+        copaAmerica: 0,
+        totalMatches: 896,
+        wins: 543,
+        goals: 1998
+    }
+];
+
+// Mock data de goleadores históricos
+const topScorersData = [
+    { position: 1, name: "Cristiano Ronaldo", team: "Portugal", goals: 128 },
+    { position: 2, name: "Lionel Messi", team: "Argentina", goals: 106 },
+    { position: 3, name: "Ali Daei", team: "Irán", goals: 109 },
+    { position: 4, name: "Sunil Chhetri", team: "India", goals: 94 },
+    { position: 5, name: "Mokhtar Dahari", team: "Malasia", goals: 89 },
+    { position: 6, name: "Pelé", team: "Brasil", goals: 77 },
+    { position: 7, name: "Godfrey Chitalu", team: "Zambia", goals: 79 },
+    { position: 8, name: "Hussein Saeed", team: "Irak", goals: 78 }
+];
+
+// Elementos del modal
+const statsModal = document.getElementById('statsModal');
+const statsBtn = document.getElementById('statsBtn');
+const statsModalClose = document.getElementById('statsModalClose');
+const statsModalBody = document.getElementById('statsModalBody');
+
+// Abrir modal
+statsBtn.addEventListener('click', () => {
+    statsModal.classList.add('active');
+    renderStatsContent();
+});
+
+// Cerrar modal
+statsModalClose.addEventListener('click', () => {
+    statsModal.classList.remove('active');
+});
+
+// Cerrar modal al hacer click en el overlay
+statsModal.querySelector('.stats-modal-overlay').addEventListener('click', () => {
+    statsModal.classList.remove('active');
+});
+
+// Prevenir que el click en el contenido cierre el modal
+statsModal.querySelector('.stats-modal-content').addEventListener('click', (e) => {
+    e.stopPropagation();
+});
+
+// Cerrar modal con tecla Escape
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && statsModal.classList.contains('active')) {
+        statsModal.classList.remove('active');
+    }
+});
+
+// Renderizar contenido del modal
+function renderStatsContent() {
+    let html = '<h3 class="section-title"><i class="fas fa-globe"></i> Ranking FIFA - Top 8 Selecciones</h3>';
+    
+    // Renderizar selecciones
+    footballTeamsData.forEach(team => {
+        html += `
+            <div class="team-card">
+                <div class="team-card-header">
+                    <div class="team-rank">#${team.rank}</div>
+                    <div class="team-flag">${team.flag}</div>
+                    <div class="team-info">
+                        <div class="team-name">${team.name}</div>
+                        <div class="team-continent">${team.continent}</div>
+                    </div>
+                </div>
+                <div class="team-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">${team.worldCups}</div>
+                        <div class="stat-label">Mundiales</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${team.totalMatches}</div>
+                        <div class="stat-label">Partidos</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${team.wins}</div>
+                        <div class="stat-label">Victorias</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${team.goals}</div>
+                        <div class="stat-label">Goles</div>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    // Sección de goleadores
+    html += '<h3 class="section-title"><i class="fas fa-star"></i> Máximos Goleadores Históricos</h3>';
+    
+    topScorersData.forEach(player => {
+        html += `
+            <div class="player-card">
+                <div class="player-position">${player.position}</div>
+                <div class="player-info">
+                    <div class="player-name">${player.name}</div>
+                    <div class="player-team">${player.team}</div>
+                </div>
+                <div>
+                    <div class="player-goals">${player.goals}</div>
+                    <div class="player-goals-label">goles</div>
+                </div>
+            </div>
+        `;
+    });
+    
+    statsModalBody.innerHTML = html;
+}
+
 // ===== INICIALIZAR AL CARGAR =====
 window.addEventListener('load', () => {
     console.log('✅ Aplicación AR cargada');
