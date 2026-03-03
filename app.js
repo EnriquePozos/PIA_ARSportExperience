@@ -3,157 +3,34 @@ import { MindARThree } from 'mindar-image-three';
 
 // ===== CONFIGURACIÓN DE MODELOS 3D (9 ITEMS) =====
 const models3D = [
-    {
-        id: 'ball',
-        name: 'Balón de Fútbol',
-        description: 'Un balón de fútbol profesional oficial FIFA.',
-        type: 'sphere',
-        color: 0xFFFFFF,
-        scale: 0.5
-    },
-    {
-        id: 'trophy',
-        name: 'Trofeo de Campeonato',
-        description: 'Copa dorada del campeonato.',
-        type: 'cone',
-        color: 0xFFD700,
-        scale: 0.6
-    },
-    {
-        id: 'cube',
-        name: 'Cubo Deportivo',
-        description: 'Modelo 3D de ejemplo.',
-        type: 'box',
-        color: 0xFF3377,
-        scale: 0.5
-    },
-    {
-        id: 'cylinder',
-        name: 'Torre de Control',
-        description: 'Representación cilíndrica de una estructura.',
-        type: 'cylinder',
-        color: 0x00FF00,
-        scale: 0.6
-    },
-    {
-        id: 'torus',
-        name: 'Anillo Olímpico',
-        description: 'Geometría circular compleja.',
-        type: 'torus',
-        color: 0x00FFFF,
-        scale: 0.4
-    },
-    {
-        id: 'icosahedron',
-        name: 'Diamante',
-        description: 'Figura multifacética brillante.',
-        type: 'icosahedron',
-        color: 0x9D00FF,
-        scale: 0.5
-    },
-    {
-        id: 'capsule',
-        name: 'Cápsula del Tiempo',
-        description: 'Contenedor futurista.',
-        type: 'capsule',
-        color: 0xFF8800,
-        scale: 0.5
-    },
-    {
-        id: 'dodecahedron',
-        name: 'Balón Poligonal',
-        description: 'Estructura matemática de 12 caras.',
-        type: 'dodecahedron',
-        color: 0xFF0055,
-        scale: 0.55
-    },
-    {
-        id: 'octahedron',
-        name: 'Pirámide Doble',
-        description: 'Estructura de equilibrio perfecto.',
-        type: 'octahedron',
-        color: 0x0000FF,
-        scale: 0.6
-    }
+    { id: 'ball', name: 'Balón de Fútbol', description: 'Un balón de fútbol profesional oficial FIFA.', type: 'sphere', color: 0xFFFFFF, scale: 0.5 },
+    { id: 'trophy', name: 'Trofeo de Campeonato', description: 'Copa dorada del campeonato.', type: 'cone', color: 0xFFD700, scale: 0.6 },
+    { id: 'cube', name: 'Cubo Deportivo', description: 'Modelo 3D de ejemplo.', type: 'box', color: 0xFF3377, scale: 0.5 },
+    { id: 'cylinder', name: 'Torre de Control', description: 'Representación cilíndrica de una estructura.', type: 'cylinder', color: 0x00FF00, scale: 0.6 },
+    { id: 'torus', name: 'Anillo Olímpico', description: 'Geometría circular compleja.', type: 'torus', color: 0x00FFFF, scale: 0.4 },
+    { id: 'icosahedron', name: 'Diamante', description: 'Figura multifacética brillante.', type: 'icosahedron', color: 0x9D00FF, scale: 0.5 },
+    { id: 'capsule', name: 'Cápsula del Tiempo', description: 'Contenedor futurista.', type: 'capsule', color: 0xFF8800, scale: 0.5 },
+    { id: 'dodecahedron', name: 'Balón Poligonal', description: 'Estructura matemática de 12 caras.', type: 'dodecahedron', color: 0xFF0055, scale: 0.55 },
+    { id: 'octahedron', name: 'Pirámide Doble', description: 'Estructura de equilibrio perfecto.', type: 'octahedron', color: 0x0000FF, scale: 0.6 }
 ];
 
 // ===== CONFIGURACIÓN DE TRIVIA (15 PREGUNTAS) =====
 const triviaQuestions = [
-    {
-        question: "¿Cuál es el diámetro oficial de un balón de fútbol profesional?",
-        options: ["68-70 cm", "60-62 cm", "72-74 cm", "65-67 cm"],
-        correct: 0
-    },
-    {
-        question: "¿En qué año se celebró el primer Mundial de Fútbol?",
-        options: ["1928", "1930", "1934", "1926"],
-        correct: 1
-    },
-    {
-        question: "¿Cuántos jugadores conforman un equipo de fútbol en el campo?",
-        options: ["9 jugadores", "10 jugadores", "11 jugadores", "12 jugadores"],
-        correct: 2
-    },
-    {
-        question: "¿Cuál es la duración oficial de un partido de fútbol?",
-        options: ["80 minutos", "90 minutos", "100 minutos", "120 minutos"],
-        correct: 1
-    },
-    {
-        question: "¿Quién es considerado el máximo goleador en la historia del fútbol?",
-        options: ["Pelé", "Lionel Messi", "Cristiano Ronaldo", "Josef Bican"],
-        correct: 3
-    },
-    {
-        question: "¿Qué país ha ganado más Copas del Mundo?",
-        options: ["Alemania", "Argentina", "Brasil", "Italia"],
-        correct: 2
-    },
-    {
-        question: "¿En qué año se fundó la FIFA?",
-        options: ["1900", "1904", "1910", "1920"],
-        correct: 1
-    },
-    {
-        question: "¿Cuánto mide un campo de fútbol profesional de largo?",
-        options: ["90-120 metros", "100-110 metros", "80-100 metros", "110-120 metros"],
-        correct: 1
-    },
-    {
-        question: "¿Qué jugador tiene el récord de más goles en un Mundial?",
-        options: ["Ronaldo", "Miroslav Klose", "Pelé", "Gerd Müller"],
-        correct: 1
-    },
-    {
-        question: "¿Cuál es el tiempo de un medio tiempo en el fútbol?",
-        options: ["40 minutos", "45 minutos", "50 minutos", "60 minutos"],
-        correct: 1
-    },
-    {
-        question: "¿Qué país organizó el primer Mundial de Fútbol?",
-        options: ["Brasil", "Argentina", "Uruguay", "Italia"],
-        correct: 2
-    },
-    {
-        question: "¿Cuántos cambios se permiten en un partido oficial de fútbol?",
-        options: ["3 cambios", "5 cambios", "7 cambios", "Sin límite"],
-        correct: 1
-    },
-    {
-        question: "¿Qué color de tarjeta expulsa directamente a un jugador?",
-        options: ["Amarilla", "Roja", "Verde", "Azul"],
-        correct: 1
-    },
-    {
-        question: "¿Cuántos pentágonos tiene un balón de fútbol tradicional?",
-        options: ["10", "12", "15", "20"],
-        correct: 1
-    },
-    {
-        question: "¿En qué año se introdujo el VAR en el fútbol?",
-        options: ["2014", "2016", "2018", "2020"],
-        correct: 2
-    }
+    { question: "¿Cuál es el diámetro oficial de un balón de fútbol profesional?", options: ["68-70 cm", "60-62 cm", "72-74 cm", "65-67 cm"], correct: 0 },
+    { question: "¿En qué año se celebró el primer Mundial de Fútbol?", options: ["1928", "1930", "1934", "1926"], correct: 1 },
+    { question: "¿Cuántos jugadores conforman un equipo de fútbol en el campo?", options: ["9 jugadores", "10 jugadores", "11 jugadores", "12 jugadores"], correct: 2 },
+    { question: "¿Cuál es la duración oficial de un partido de fútbol?", options: ["80 minutos", "90 minutos", "100 minutos", "120 minutos"], correct: 1 },
+    { question: "¿Quién es considerado el máximo goleador en la historia del fútbol?", options: ["Pelé", "Lionel Messi", "Cristiano Ronaldo", "Josef Bican"], correct: 3 },
+    { question: "¿Qué país ha ganado más Copas del Mundo?", options: ["Alemania", "Argentina", "Brasil", "Italia"], correct: 2 },
+    { question: "¿En qué año se fundó la FIFA?", options: ["1900", "1904", "1910", "1920"], correct: 1 },
+    { question: "¿Cuánto mide un campo de fútbol profesional de largo?", options: ["90-120 metros", "100-110 metros", "80-100 metros", "110-120 metros"], correct: 1 },
+    { question: "¿Qué jugador tiene el récord de más goles en un Mundial?", options: ["Ronaldo", "Miroslav Klose", "Pelé", "Gerd Müller"], correct: 1 },
+    { question: "¿Cuál es el tiempo de un medio tiempo en el fútbol?", options: ["40 minutos", "45 minutos", "50 minutos", "60 minutos"], correct: 1 },
+    { question: "¿Qué país organizó el primer Mundial de Fútbol?", options: ["Brasil", "Argentina", "Uruguay", "Italia"], correct: 2 },
+    { question: "¿Cuántos cambios se permiten en un partido oficial de fútbol?", options: ["3 cambios", "5 cambios", "7 cambios", "Sin límite"], correct: 1 },
+    { question: "¿Qué color de tarjeta expulsa directamente a un jugador?", options: ["Amarilla", "Roja", "Verde", "Azul"], correct: 1 },
+    { question: "¿Cuántos pentágonos tiene un balón de fútbol tradicional?", options: ["10", "12", "15", "20"], correct: 1 },
+    { question: "¿En qué año se introdujo el VAR en el fútbol?", options: ["2014", "2016", "2018", "2020"], correct: 2 }
 ];
 
 // ===== VARIABLES GLOBALES =====
@@ -164,7 +41,6 @@ let currentAnchor = null;
 let isAnimating = false;
 let manualRotation = 0;
 
-// Variables de trivia
 let currentQuestion = 0;
 let correctAnswers = 0;
 let answeredQuestions = new Set();
@@ -249,64 +125,29 @@ function createModel(modelData) {
     });
 
     switch(modelData.type) {
-        case 'sphere':
-            geometry = new THREE.SphereGeometry(modelData.scale, 32, 32);
-            material = baseMaterial;
-            break;
-        case 'cone':
-            geometry = new THREE.ConeGeometry(modelData.scale * 0.5, modelData.scale * 1.5, 32);
-            material = baseMaterial;
-            break;
-        case 'box':
-            geometry = new THREE.BoxGeometry(modelData.scale, modelData.scale, modelData.scale);
-            material = baseMaterial;
-            break;
-        case 'cylinder':
-            geometry = new THREE.CylinderGeometry(modelData.scale * 0.4, modelData.scale * 0.4, modelData.scale * 1.2, 32);
-            material = baseMaterial;
-            break;
-        case 'torus':
-            geometry = new THREE.TorusGeometry(modelData.scale, modelData.scale * 0.3, 16, 100);
-            material = baseMaterial;
-            break;
-        case 'icosahedron':
-            geometry = new THREE.IcosahedronGeometry(modelData.scale, 0);
-            material = baseMaterial;
-            break;
-        case 'capsule':
-            geometry = new THREE.CapsuleGeometry(modelData.scale * 0.3, modelData.scale * 0.8, 4, 8);
-            material = baseMaterial;
-            break;
-        case 'dodecahedron':
-            geometry = new THREE.DodecahedronGeometry(modelData.scale, 0);
-            material = baseMaterial;
-            break;
-        case 'octahedron':
-            geometry = new THREE.OctahedronGeometry(modelData.scale, 0);
-            material = baseMaterial;
-            break;
-        default:
-            geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
-            material = baseMaterial;
+        case 'sphere': geometry = new THREE.SphereGeometry(modelData.scale, 32, 32); material = baseMaterial; break;
+        case 'cone': geometry = new THREE.ConeGeometry(modelData.scale * 0.5, modelData.scale * 1.5, 32); material = baseMaterial; break;
+        case 'box': geometry = new THREE.BoxGeometry(modelData.scale, modelData.scale, modelData.scale); material = baseMaterial; break;
+        case 'cylinder': geometry = new THREE.CylinderGeometry(modelData.scale * 0.4, modelData.scale * 0.4, modelData.scale * 1.2, 32); material = baseMaterial; break;
+        case 'torus': geometry = new THREE.TorusGeometry(modelData.scale, modelData.scale * 0.3, 16, 100); material = baseMaterial; break;
+        case 'icosahedron': geometry = new THREE.IcosahedronGeometry(modelData.scale, 0); material = baseMaterial; break;
+        case 'capsule': geometry = new THREE.CapsuleGeometry(modelData.scale * 0.3, modelData.scale * 0.8, 4, 8); material = baseMaterial; break;
+        case 'dodecahedron': geometry = new THREE.DodecahedronGeometry(modelData.scale, 0); material = baseMaterial; break;
+        case 'octahedron': geometry = new THREE.OctahedronGeometry(modelData.scale, 0); material = baseMaterial; break;
+        default: geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5); material = baseMaterial;
     }
 
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(0, 0, 0.3);
-    
     return mesh;
 }
 
 // ===== ROTAR MODELO =====
 function rotateModel(direction) {
     if (!isARStarted || !currentObject) return;
-    
     const rotationAmount = Math.PI / 8;
-    
-    if (direction === 'left') {
-        manualRotation -= rotationAmount;
-    } else if (direction === 'right') {
-        manualRotation += rotationAmount;
-    }
+    if (direction === 'left') manualRotation -= rotationAmount;
+    else if (direction === 'right') manualRotation += rotationAmount;
 }
 
 // ===== TOGGLE ANIMACIÓN =====
@@ -325,18 +166,10 @@ function updateStatus(message, status) {
     statusText.textContent = message;
     
     switch(status) {
-        case 'loading':
-            statusIndicator.style.background = '#FFA500';
-            break;
-        case 'active':
-            statusIndicator.style.background = '#00ff00';
-            break;
-        case 'searching':
-            statusIndicator.style.background = '#00ffff';
-            break;
-        case 'error':
-            statusIndicator.style.background = '#ff0000';
-            break;
+        case 'loading': statusIndicator.style.background = '#FFA500'; break;
+        case 'active': statusIndicator.style.background = '#00ff00'; break;
+        case 'searching': statusIndicator.style.background = '#00ffff'; break;
+        case 'error': statusIndicator.style.background = '#ff0000'; break;
     }
 }
 
@@ -383,9 +216,7 @@ function showARError(errorMessage = '') {
 function stopAR() {
     if (mindarThree) {
         mindarThree.stop();
-        if(mindarThree.renderer) {
-            mindarThree.renderer.setAnimationLoop(null);
-        }
+        if(mindarThree.renderer) mindarThree.renderer.setAnimationLoop(null);
         mindarThree = null;
         isARStarted = false;
         const container = document.getElementById('container');
@@ -443,7 +274,6 @@ const triviaScore = document.getElementById('triviaScore');
 
 totalQSpan.textContent = triviaQuestions.length;
 
-// Cargar pregunta
 function loadQuestion() {
     const question = triviaQuestions[currentQuestion];
     
@@ -461,11 +291,8 @@ function loadQuestion() {
         
         if (wasAnswered) {
             button.disabled = true;
-            if (index === question.correct) {
-                button.classList.add('correct');
-            } else {
-                button.classList.add('disabled');
-            }
+            if (index === question.correct) button.classList.add('correct');
+            else button.classList.add('disabled');
         } else {
             button.addEventListener('click', () => checkAnswer(index, button));
         }
@@ -474,7 +301,6 @@ function loadQuestion() {
     });
 }
 
-// Verificar respuesta
 function checkAnswer(selectedIndex, button) {
     const question = triviaQuestions[currentQuestion];
     const allButtons = triviaOptions.querySelectorAll('.trivia-option-btn');
@@ -492,7 +318,6 @@ function checkAnswer(selectedIndex, button) {
     
     updateScore();
     
-    // Auto-avanzar después de 1.5 segundos
     setTimeout(() => {
         if (currentQuestion < triviaQuestions.length - 1) {
             currentQuestion++;
@@ -501,13 +326,11 @@ function checkAnswer(selectedIndex, button) {
     }, 1500);
 }
 
-// Actualizar puntuación
 function updateScore() {
     const answered = answeredQuestions.size;
     triviaScore.textContent = `${correctAnswers}/${answered} correctas`;
 }
 
-// Navegar preguntas
 triviaPrev.addEventListener('click', () => {
     if (currentQuestion > 0) {
         currentQuestion--;
@@ -523,100 +346,17 @@ triviaNext.addEventListener('click', () => {
 });
 
 // ===== MODAL DE ESTADÍSTICAS =====
-
-// Mock data de selecciones de fútbol
 const footballTeamsData = [
-    {
-        rank: 1,
-        name: "Argentina",
-        flag: "🇦🇷",
-        continent: "Sudamérica",
-        worldCups: 3,
-        copaAmerica: 15,
-        totalMatches: 1056,
-        wins: 593,
-        goals: 2346
-    },
-    {
-        rank: 2,
-        name: "Francia",
-        flag: "🇫🇷",
-        continent: "Europa",
-        worldCups: 2,
-        copaAmerica: 0,
-        totalMatches: 954,
-        wins: 553,
-        goals: 2145
-    },
-    {
-        rank: 3,
-        name: "Brasil",
-        flag: "🇧🇷",
-        continent: "Sudamérica",
-        worldCups: 5,
-        copaAmerica: 9,
-        totalMatches: 1120,
-        wins: 739,
-        goals: 2653
-    },
-    {
-        rank: 4,
-        name: "Inglaterra",
-        flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-        continent: "Europa",
-        worldCups: 1,
-        copaAmerica: 0,
-        totalMatches: 1024,
-        wins: 598,
-        goals: 2198
-    },
-    {
-        rank: 5,
-        name: "Bélgica",
-        flag: "🇧🇪",
-        continent: "Europa",
-        worldCups: 0,
-        copaAmerica: 0,
-        totalMatches: 812,
-        wins: 417,
-        goals: 1534
-    },
-    {
-        rank: 6,
-        name: "Países Bajos",
-        flag: "🇳🇱",
-        continent: "Europa",
-        worldCups: 0,
-        copaAmerica: 0,
-        totalMatches: 897,
-        wins: 532,
-        goals: 1956
-    },
-    {
-        rank: 7,
-        name: "Portugal",
-        flag: "🇵🇹",
-        continent: "Europa",
-        worldCups: 0,
-        copaAmerica: 0,
-        totalMatches: 782,
-        wins: 456,
-        goals: 1632
-    },
-    {
-        rank: 8,
-        name: "España",
-        flag: "🇪🇸",
-        continent: "Europa",
-        worldCups: 1,
-        copaAmerica: 0,
-        totalMatches: 896,
-        wins: 543,
-        goals: 1998
-    }
+    { rank: 1, name: "Argentina", flag: "🇦🇷", continent: "Sudamérica", worldCups: 3, copaAmerica: 15, totalMatches: 1056, wins: 593, goals: 2346 },
+    { rank: 2, name: "Francia", flag: "🇫🇷", continent: "Europa", worldCups: 2, copaAmerica: 0, totalMatches: 954, wins: 553, goals: 2145 },
+    { rank: 3, name: "Brasil", flag: "🇧🇷", continent: "Sudamérica", worldCups: 5, copaAmerica: 9, totalMatches: 1120, wins: 739, goals: 2653 },
+    { rank: 4, name: "Inglaterra", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", continent: "Europa", worldCups: 1, copaAmerica: 0, totalMatches: 1024, wins: 598, goals: 2198 },
+    { rank: 5, name: "Bélgica", flag: "🇧🇪", continent: "Europa", worldCups: 0, copaAmerica: 0, totalMatches: 812, wins: 417, goals: 1534 },
+    { rank: 6, name: "Países Bajos", flag: "🇳🇱", continent: "Europa", worldCups: 0, copaAmerica: 0, totalMatches: 897, wins: 532, goals: 1956 },
+    { rank: 7, name: "Portugal", flag: "🇵🇹", continent: "Europa", worldCups: 0, copaAmerica: 0, totalMatches: 782, wins: 456, goals: 1632 },
+    { rank: 8, name: "España", flag: "🇪🇸", continent: "Europa", worldCups: 1, copaAmerica: 0, totalMatches: 896, wins: 543, goals: 1998 }
 ];
 
-// Mock data de goleadores históricos
 const topScorersData = [
     { position: 1, name: "Cristiano Ronaldo", team: "Portugal", goals: 128 },
     { position: 2, name: "Lionel Messi", team: "Argentina", goals: 106 },
@@ -628,45 +368,37 @@ const topScorersData = [
     { position: 8, name: "Hussein Saeed", team: "Irak", goals: 78 }
 ];
 
-// Elementos del modal
 const statsModal = document.getElementById('statsModal');
 const statsBtn = document.getElementById('statsBtn');
 const statsModalClose = document.getElementById('statsModalClose');
 const statsModalBody = document.getElementById('statsModalBody');
 
-// Abrir modal
 statsBtn.addEventListener('click', () => {
     statsModal.classList.add('active');
     renderStatsContent();
 });
 
-// Cerrar modal
 statsModalClose.addEventListener('click', () => {
     statsModal.classList.remove('active');
 });
 
-// Cerrar modal al hacer click en el overlay
 statsModal.querySelector('.stats-modal-overlay').addEventListener('click', () => {
     statsModal.classList.remove('active');
 });
 
-// Prevenir que el click en el contenido cierre el modal
 statsModal.querySelector('.stats-modal-content').addEventListener('click', (e) => {
     e.stopPropagation();
 });
 
-// Cerrar modal con tecla Escape
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && statsModal.classList.contains('active')) {
         statsModal.classList.remove('active');
     }
 });
 
-// Renderizar contenido del modal
 function renderStatsContent() {
     let html = '<h3 class="section-title"><i class="fas fa-globe"></i> Ranking FIFA - Top 8 Selecciones</h3>';
     
-    // Renderizar selecciones
     footballTeamsData.forEach(team => {
         html += `
             <div class="team-card">
@@ -700,7 +432,6 @@ function renderStatsContent() {
         `;
     });
     
-    // Sección de goleadores
     html += '<h3 class="section-title"><i class="fas fa-star"></i> Máximos Goleadores Históricos</h3>';
     
     topScorersData.forEach(player => {
@@ -722,72 +453,19 @@ function renderStatsContent() {
     statsModalBody.innerHTML = html;
 }
 
-// ===== SISTEMA DE TUTORIAL =====
-
-// Pasos del tutorial
+// ===== SISTEMA DE TUTORIAL (MODAL FIJO Y SCROLL) =====
 const tutorialSteps = [
-    {
-        id: 'welcome',
-        target: null, // Sin elemento específico
-        title: '¡Bienvenido a AR Sports!',
-        description: 'Esta aplicación te permite explorar el mundo del fútbol con Realidad Aumentada. Te mostraremos cómo usarla.',
-        icon: 'fa-rocket',
-        position: 'center'
-    },
-    {
-        id: 'ar-canvas',
-        target: '#arCanvas',
-        title: 'Visor de Realidad Aumentada',
-        description: 'Apunta tu cámara a un marcador para ver objetos 3D flotando en el espacio real. Los objetos aparecerán automáticamente.',
-        icon: 'fa-camera',
-        position: 'top'
-    },
-    {
-        id: 'controls',
-        target: '.controls',
-        title: 'Controles 3D',
-        description: 'Usa los botones izquierdo/derecho para rotar el modelo. El botón central activa la rotación automática.',
-        icon: 'fa-gamepad',
-        position: 'top'
-    },
-    {
-        id: 'trivia',
-        target: '.trivia-card',
-        title: 'Trivia Interactiva',
-        description: 'Responde preguntas sobre fútbol. Selecciona una respuesta y descubre si es correcta. ¡Acumula puntos!',
-        icon: 'fa-brain',
-        position: 'left'
-    },
-    {
-        id: 'scan-info',
-        target: '.scan-info',
-        title: 'Información del Objeto',
-        description: 'Cuando detectes un marcador, aquí verás información detallada sobre el objeto 3D que estás visualizando.',
-        icon: 'fa-info-circle',
-        position: 'left'
-    },
-    {
-        id: 'gallery',
-        target: '[data-page="gallery"]',
-        title: 'Galería de Videos',
-        description: 'Accede a una colección de videos deportivos. Explora contenido multimedia relacionado con el fútbol.',
-        icon: 'fa-video',
-        position: 'bottom'
-    },
-    {
-        id: 'stats',
-        target: '#statsBtn',
-        title: 'Estadísticas Mundiales',
-        description: '¡Haz clic aquí para ver ranking FIFA, goleadores históricos y datos de selecciones! ¡Ya estás listo para usar la app!',
-        icon: 'fa-chart-bar',
-        position: 'bottom'
-    }
+    { id: 'welcome', target: null, title: '¡Bienvenido a AR Sports!', description: 'Esta aplicación te permite explorar el mundo del fútbol con Realidad Aumentada. Te mostraremos cómo usarla.', icon: 'fa-rocket' },
+    { id: 'ar-canvas', target: '#arCanvas', title: 'Visor de Realidad Aumentada', description: 'Apunta tu cámara a un marcador para ver objetos 3D flotando en el espacio real. Los objetos aparecerán automáticamente.', icon: 'fa-camera' },
+    { id: 'controls', target: '.controls', title: 'Controles 3D', description: 'Usa los botones izquierdo/derecho para rotar el modelo. El botón central activa la rotación automática.', icon: 'fa-gamepad' },
+    { id: 'trivia', target: '.trivia-card', title: 'Trivia Interactiva', description: 'Responde preguntas sobre fútbol. Selecciona una respuesta y descubre si es correcta. ¡Acumula puntos!', icon: 'fa-brain' },
+    { id: 'scan-info', target: '.scan-info', title: 'Información del Objeto', description: 'Cuando detectes un marcador, aquí verás información detallada sobre el objeto 3D que estás visualizando.', icon: 'fa-info-circle' },
+    { id: 'gallery', target: '[data-page="gallery"]', title: 'Galería de Videos', description: 'Accede a una colección de videos deportivos. Explora contenido multimedia relacionado con el fútbol.', icon: 'fa-video' },
+    { id: 'stats', target: '#statsBtn', title: 'Estadísticas Mundiales', description: '¡Haz clic aquí para ver ranking FIFA, goleadores históricos y datos de selecciones! ¡Ya estás listo para usar la app!', icon: 'fa-chart-bar' }
 ];
 
-// Variables del tutorial
 let currentTutorialStep = 0;
 const tutorialOverlay = document.getElementById('tutorialOverlay');
-const tutorialSpotlight = document.getElementById('tutorialSpotlight');
 const tutorialTooltip = document.getElementById('tutorialTooltip');
 const tutorialProgress = document.getElementById('tutorialProgress');
 const tutorialTitle = document.getElementById('tutorialTitle');
@@ -798,123 +476,47 @@ const tutorialNext = document.getElementById('tutorialNext');
 const tutorialSkip = document.getElementById('tutorialSkip');
 const helpBtn = document.getElementById('helpBtn');
 
-// Verificar si es la primera vez
 function checkFirstTime() {
     const hasSeenTutorial = localStorage.getItem('hasSeenTutorial');
     if (!hasSeenTutorial) {
-        // Esperar a que todo cargue
         setTimeout(() => {
             startTutorial();
         }, 1000);
     }
 }
 
-// Iniciar tutorial
 function startTutorial() {
     currentTutorialStep = 0;
     tutorialOverlay.classList.add('active');
     showTutorialStep(currentTutorialStep);
 }
 
-// Mostrar paso del tutorial
 function showTutorialStep(stepIndex) {
     const step = tutorialSteps[stepIndex];
     
-    // Actualizar progreso
     tutorialProgress.textContent = `Paso ${stepIndex + 1}/${tutorialSteps.length}`;
-    
-    // Actualizar contenido
     tutorialTitle.textContent = step.title;
     tutorialDescription.textContent = step.description;
     tutorialIcon.innerHTML = `<i class="fas ${step.icon}"></i>`;
     
-    // Actualizar botones
     tutorialPrev.disabled = stepIndex === 0;
     tutorialNext.textContent = stepIndex === tutorialSteps.length - 1 ? 'Finalizar' : 'Siguiente';
     
-    // Posicionar spotlight y tooltip
+    // Limpiar el resaltado del paso anterior
+    document.querySelectorAll('.tutorial-highlight').forEach(el => {
+        el.classList.remove('tutorial-highlight');
+    });
+    
+    // Resaltar el nuevo elemento y hacer scroll
     if (step.target) {
         const target = document.querySelector(step.target);
         if (target) {
-            positionSpotlight(target);
-            positionTooltip(target, step.position);
+            target.classList.add('tutorial-highlight');
+            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
-    } else {
-        // Sin spotlight, tooltip centrado
-        tutorialSpotlight.style.display = 'none';
-        centerTooltip();
     }
 }
 
-// Posicionar spotlight
-function positionSpotlight(element) {
-    const rect = element.getBoundingClientRect();
-    tutorialSpotlight.style.display = 'block';
-    tutorialSpotlight.style.top = `${rect.top - 10}px`;
-    tutorialSpotlight.style.left = `${rect.left - 10}px`;
-    tutorialSpotlight.style.width = `${rect.width + 20}px`;
-    tutorialSpotlight.style.height = `${rect.height + 20}px`;
-}
-
-// Posicionar tooltip
-function positionTooltip(element, position) {
-    const rect = element.getBoundingClientRect();
-    const tooltipRect = tutorialTooltip.getBoundingClientRect();
-    
-    // Remover todas las clases de flecha
-    tutorialTooltip.classList.remove('arrow-top', 'arrow-bottom', 'arrow-left', 'arrow-right');
-    
-    let top, left;
-    
-    switch(position) {
-        case 'top':
-            top = rect.bottom + 20;
-            left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
-            tutorialTooltip.classList.add('arrow-top');
-            break;
-        case 'bottom':
-            top = rect.top - tooltipRect.height - 20;
-            left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
-            tutorialTooltip.classList.add('arrow-bottom');
-            break;
-        case 'left':
-            top = rect.top + (rect.height / 2) - (tooltipRect.height / 2);
-            left = rect.right + 20;
-            tutorialTooltip.classList.add('arrow-left');
-            break;
-        case 'right':
-            top = rect.top + (rect.height / 2) - (tooltipRect.height / 2);
-            left = rect.left - tooltipRect.width - 20;
-            tutorialTooltip.classList.add('arrow-right');
-            break;
-        default:
-            centerTooltip();
-            return;
-    }
-    
-    // Ajustar si se sale de la pantalla
-    if (left < 10) left = 10;
-    if (left + tooltipRect.width > window.innerWidth - 10) {
-        left = window.innerWidth - tooltipRect.width - 10;
-    }
-    if (top < 10) top = 10;
-    if (top + tooltipRect.height > window.innerHeight - 10) {
-        top = window.innerHeight - tooltipRect.height - 10;
-    }
-    
-    tutorialTooltip.style.top = `${top}px`;
-    tutorialTooltip.style.left = `${left}px`;
-}
-
-// Centrar tooltip
-function centerTooltip() {
-    tutorialTooltip.classList.remove('arrow-top', 'arrow-bottom', 'arrow-left', 'arrow-right');
-    tutorialTooltip.style.top = '50%';
-    tutorialTooltip.style.left = '50%';
-    tutorialTooltip.style.transform = 'translate(-50%, -50%)';
-}
-
-// Navegar hacia adelante
 tutorialNext.addEventListener('click', () => {
     if (currentTutorialStep < tutorialSteps.length - 1) {
         currentTutorialStep++;
@@ -924,7 +526,6 @@ tutorialNext.addEventListener('click', () => {
     }
 });
 
-// Navegar hacia atrás
 tutorialPrev.addEventListener('click', () => {
     if (currentTutorialStep > 0) {
         currentTutorialStep--;
@@ -932,27 +533,20 @@ tutorialPrev.addEventListener('click', () => {
     }
 });
 
-// Saltar tutorial
 tutorialSkip.addEventListener('click', () => {
     finishTutorial();
 });
 
-// Finalizar tutorial
 function finishTutorial() {
     tutorialOverlay.classList.remove('active');
+    document.querySelectorAll('.tutorial-highlight').forEach(el => {
+        el.classList.remove('tutorial-highlight');
+    });
     localStorage.setItem('hasSeenTutorial', 'true');
 }
 
-// Botón de ayuda para reactivar tutorial
 helpBtn.addEventListener('click', () => {
     startTutorial();
-});
-
-// Reposicionar en resize
-window.addEventListener('resize', () => {
-    if (tutorialOverlay.classList.contains('active')) {
-        showTutorialStep(currentTutorialStep);
-    }
 });
 
 // ===== INICIALIZAR AL CARGAR =====
@@ -960,7 +554,5 @@ window.addEventListener('load', () => {
     console.log('✅ Aplicación AR cargada');
     loadQuestion();
     if(homePage.style.display !== 'none') initAR();
-    
-    // Verificar si mostrar tutorial
     checkFirstTime();
 });
