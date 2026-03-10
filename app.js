@@ -1,17 +1,17 @@
 import * as THREE from 'three';
 import { MindARThree } from 'mindar-image-three';
 
-// ===== CONFIGURACIÓN DE MODELOS 3D (9 ITEMS) =====
+// ===== CONFIGURACIÓN DE MODELOS 3D Y DATOS CURIOSOS (9 SELECCIONES) =====
 const models3D = [
-    { id: 'ball', name: 'Balón de Fútbol', description: 'Un balón de fútbol profesional oficial FIFA.', type: 'sphere', color: 0xFFFFFF, scale: 0.5 },
-    { id: 'trophy', name: 'Trofeo de Campeonato', description: 'Copa dorada del campeonato.', type: 'cone', color: 0xFFD700, scale: 0.6 },
-    { id: 'cube', name: 'Cubo Deportivo', description: 'Modelo 3D de ejemplo.', type: 'box', color: 0xFF3377, scale: 0.5 },
-    { id: 'cylinder', name: 'Torre de Control', description: 'Representación cilíndrica de una estructura.', type: 'cylinder', color: 0x00FF00, scale: 0.6 },
-    { id: 'torus', name: 'Anillo Olímpico', description: 'Geometría circular compleja.', type: 'torus', color: 0x00FFFF, scale: 0.4 },
-    { id: 'icosahedron', name: 'Diamante', description: 'Figura multifacética brillante.', type: 'icosahedron', color: 0x9D00FF, scale: 0.5 },
-    { id: 'capsule', name: 'Cápsula del Tiempo', description: 'Contenedor futurista.', type: 'capsule', color: 0xFF8800, scale: 0.5 },
-    { id: 'dodecahedron', name: 'Balón Poligonal', description: 'Estructura matemática de 12 caras.', type: 'dodecahedron', color: 0xFF0055, scale: 0.55 },
-    { id: 'octahedron', name: 'Pirámide Doble', description: 'Estructura de equilibrio perfecto.', type: 'octahedron', color: 0x0000FF, scale: 0.6 }
+    { id: 'mexico', name: 'México', description: 'Único país en ser sede de tres Copas del Mundo (1970, 1986 y 2026).', type: 'sphere', color: 0xFFFFFF, scale: 0.5 },
+    { id: 'sudafrica', name: 'Sudáfrica', description: 'Primer país africano en albergar una Copa del Mundo de la FIFA (2010).', type: 'cone', color: 0xFFD700, scale: 0.6 },
+    { id: 'tunez', name: 'Túnez', description: 'Primera selección africana en ganar un partido mundialista (contra México en 1978).', type: 'box', color: 0xFF3377, scale: 0.5 },
+    { id: 'uruguay', name: 'Uruguay', description: 'Primer campeón del mundo en la historia (1930) y protagonista del épico Maracanazo.', type: 'cylinder', color: 0x00FF00, scale: 0.6 },
+    { id: 'uzbekistan', name: 'Uzbekistán', description: 'Potencia emergente de Asia, recientes campeones de la Copa Asiática Sub-20.', type: 'torus', color: 0x00FFFF, scale: 0.4 },
+    { id: 'colombia', name: 'Colombia', description: 'Su mejor participación histórica fue llegar a Cuartos de Final en Brasil 2014.', type: 'icosahedron', color: 0x9D00FF, scale: 0.5 },
+    { id: 'corea', name: 'Corea del Sur', description: 'Único país asiático en alcanzar las Semifinales de un Mundial (2002).', type: 'capsule', color: 0xFF8800, scale: 0.5 },
+    { id: 'espana', name: 'España', description: 'Campeones en 2010 deslumbrando al mundo con su icónico estilo "Tiki-Taka".', type: 'dodecahedron', color: 0xFF0055, scale: 0.55 },
+    { id: 'japon', name: 'Japón', description: 'Famosos por dejar su vestidor impecable y con grullas de origami tras cada partido.', type: 'octahedron', color: 0x0000FF, scale: 0.6 }
 ];
 
 // ===== CONFIGURACIÓN DE TRIVIA (15 PREGUNTAS) =====
@@ -45,6 +45,10 @@ let currentQuestion = 0;
 let correctAnswers = 0;
 let answeredQuestions = new Set();
 
+// ===== VARIABLES DE GALERÍA =====
+let isGalleryUnlocked = false;
+let currentGalleryCountry = -1;
+
 // ===== INICIALIZACIÓN DE MIND AR =====
 async function initAR() {
     const container = document.getElementById('container');
@@ -57,7 +61,7 @@ async function initAR() {
         
         mindarThree = new MindARThree({
             container: container,
-            imageTargetSrc: './banderas.mind',
+            imageTargetSrc: './banderasrelieve.mind',
             uiLoading: "no",
             uiScanning: "no", 
             uiError: "no"
@@ -84,6 +88,9 @@ async function initAR() {
                 currentAnchor = anchor;
                 updateStatus(`¡${item.name} detectado!`, 'active');
                 updateScanInfo(item);
+                
+                // Desbloquear galería al escanear marcador
+                unlockGalleryForCountry(index, item.name);
             };
             
             anchor.onTargetLost = () => {
@@ -231,11 +238,19 @@ const galleryPage = document.getElementById('galleryPage');
 
 navLinks.forEach(link => {
     link.addEventListener('click', (e) => {
+        const page = link.getAttribute('data-page');
+        
+        // Bloqueo de Galería
+        if (page === 'gallery' && !isGalleryUnlocked) {
+            e.preventDefault();
+            alert("🔒 ¡Galería Bloqueada!\n\nDebes escanear la bandera de alguna selección en la cámara AR para desbloquear su contenido exclusivo.");
+            return;
+        }
+        
         e.preventDefault();
         navLinks.forEach(l => l.classList.remove('active'));
         link.classList.add('active');
         
-        const page = link.getAttribute('data-page');
         if (page === 'home') {
             homePage.style.display = 'block';
             galleryPage.style.display = 'none';
@@ -502,12 +517,10 @@ function showTutorialStep(stepIndex) {
     tutorialPrev.disabled = stepIndex === 0;
     tutorialNext.textContent = stepIndex === tutorialSteps.length - 1 ? 'Finalizar' : 'Siguiente';
     
-    // Limpiar el resaltado del paso anterior
     document.querySelectorAll('.tutorial-highlight').forEach(el => {
         el.classList.remove('tutorial-highlight');
     });
     
-    // Resaltar el nuevo elemento y hacer scroll
     if (step.target) {
         const target = document.querySelector(step.target);
         if (target) {
@@ -547,6 +560,127 @@ function finishTutorial() {
 
 helpBtn.addEventListener('click', () => {
     startTutorial();
+});
+
+// ===== FUNCIONES PARA LA GALERÍA Y FILTROS =====
+// Base de datos de videos locales (Mapeados del 0 al 8)
+const galleryData = {
+    0: [ // México
+        { title: "Momentos inolvidables", meta: "Selección Mexicana", icon: "fa-star", src: "./video/mexico1.mp4" },
+        { title: "Top 10 Goles", meta: "El Tri en Mundiales", icon: "fa-futbol", src: "./video/mexico2.mp4" }
+    ],
+    1: [ // Sudáfrica
+        { title: "Sudáfrica vs México", meta: "Mundial 2010", icon: "fa-play-circle", src: "./video/sudafrica1.mp4" },
+        { title: "Francia vs Sudáfrica", meta: "Mundial 2010", icon: "fa-play-circle", src: "./video/sudafrica2.mp4" }
+    ],
+    2: [ // Túnez
+        { title: "Túnez vs Inglaterra", meta: "Mundial 2018", icon: "fa-play-circle", src: "./video/tunez1.mp4" },
+        { title: "Panamá vs Túnez", meta: "Mundial 2018", icon: "fa-play-circle", src: "./video/tunez2.mp4" }
+    ],
+    3: [ // Uruguay
+        { title: "Goles Memorables", meta: "Uruguay en Mundiales", icon: "fa-star", src: "./video/uruguay1.mp4" },
+        { title: "Uruguay vs Portugal", meta: "Mundial 2018", icon: "fa-play-circle", src: "./video/uruguay2.mp4" }
+    ],
+    4: [ // Uzbekistán (Solo 1 video)
+        { title: "Historic Campaign", meta: "Uzbekistán vs Qatar", icon: "fa-trophy", src: "./video/uzbekistan1.mp4" }
+    ],
+    5: [ // Colombia
+        { title: "Mejores Goles (2012-2022)", meta: "Parte 1", icon: "fa-futbol", src: "./video/colombia1.mp4" },
+        { title: "Mejores Goles (2012-2022)", meta: "Parte 2", icon: "fa-futbol", src: "./video/colombia2.mp4" }
+    ],
+    6: [ // Corea del Sur
+        { title: "Goles Memorables", meta: "Corea en Mundiales", icon: "fa-star", src: "./video/corea1.mp4" },
+        { title: "Corea vs Alemania", meta: "Mundial 2018", icon: "fa-play-circle", src: "./video/corea2.mp4" }
+    ],
+    7: [ // España
+        { title: "Goles Memorables", meta: "España en Mundiales", icon: "fa-star", src: "./video/espania1.mp4" },
+        { title: "Todos los goles 2010", meta: "Villa, Iniesta & Puyol", icon: "fa-trophy", src: "./video/espania2.mp4" }
+    ],
+    8: [ // Japón
+        { title: "Todos los goles 2022", meta: "Japón en Qatar", icon: "fa-futbol", src: "./video/japon1.mp4" },
+        { title: "Japón vs España", meta: "Comeback Win 2022", icon: "fa-fire", src: "./video/japon2.mp4" }
+    ]
+};
+
+function unlockGalleryForCountry(index, countryName) {
+    isGalleryUnlocked = true;
+    currentGalleryCountry = index;
+    
+    const galleryTitle = document.getElementById('galleryTitle');
+    if(galleryTitle) galleryTitle.innerHTML = `<i class="fas fa-flag"></i> Videos: ${countryName}`;
+    
+    const videoListContainer = document.getElementById('videoListContainer');
+    if(!videoListContainer) return;
+    
+    videoListContainer.innerHTML = ''; 
+    
+    // Obtener los videos correspondientes al índice del marcador
+    const videosData = galleryData[index] || [];
+    const videoPlayer = document.getElementById('mainVideoPlayer');
+    
+    videosData.forEach((vid, i) => {
+        const videoEl = document.createElement('div');
+        videoEl.className = `video-list-item d-flex gap-3 mb-3 ${i === 0 ? 'active-video' : ''}`;
+        videoEl.innerHTML = `
+            <div class="video-thumbnail">
+                <i class="fas ${vid.icon}" style="font-size: 1.5rem; color: rgba(0,0,0,0.3);"></i>
+            </div>
+            <div class="video-info flex-grow-1">
+                <h5 class="video-title" style="font-size: 0.9rem;">${vid.title}</h5>
+                <p class="video-meta">${vid.meta}</p>
+            </div>
+            <i class="fas fa-play-circle mt-2 text-muted" style="font-size: 1.2rem; color: var(--neon-cyan) !important;"></i>
+        `;
+        
+        videoEl.addEventListener('click', () => {
+            document.querySelectorAll('.video-list-item').forEach(el => el.classList.remove('active-video'));
+            videoEl.classList.add('active-video');
+            videoPlayer.src = vid.src;
+            videoPlayer.play();
+        });
+        
+        videoListContainer.appendChild(videoEl);
+    });
+    
+    // Cargar el primer video automáticamente en el reproductor (sin auto-play)
+    if (videosData.length > 0) {
+        videoPlayer.src = videosData[0].src;
+    } else {
+        videoPlayer.src = "";
+    }
+}
+
+// Configuración de los botones de filtros
+const videoPlayer = document.getElementById('mainVideoPlayer');
+const filterBtns = document.querySelectorAll('.filter-container button');
+
+function resetFilterButtons() {
+    filterBtns.forEach(btn => btn.classList.remove('correct'));
+}
+
+document.getElementById('btnFilterNone').addEventListener('click', function() {
+    resetFilterButtons(); this.classList.add('correct');
+    videoPlayer.style.filter = 'none';
+});
+
+document.getElementById('btnFilterBlur').addEventListener('click', function() {
+    resetFilterButtons(); this.classList.add('correct');
+    videoPlayer.style.filter = 'blur(6px)';
+});
+
+document.getElementById('btnFilterPixel').addEventListener('click', function() {
+    resetFilterButtons(); this.classList.add('correct');
+    videoPlayer.style.filter = 'url(#pixelate)';
+});
+
+document.getElementById('btnFilterThermal').addEventListener('click', function() {
+    resetFilterButtons(); this.classList.add('correct');
+    videoPlayer.style.filter = 'invert(100%) sepia(100%) saturate(700%) hue-rotate(180deg) contrast(1.5)';
+});
+
+document.getElementById('btnFilterCustom').addEventListener('click', function() {
+    resetFilterButtons(); this.classList.add('correct');
+    videoPlayer.style.filter = 'saturate(250%) contrast(1.2) sepia(40%) hue-rotate(320deg)';
 });
 
 // ===== INICIALIZAR AL CARGAR =====

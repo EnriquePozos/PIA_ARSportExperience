@@ -220,7 +220,6 @@ body::before {
 .tutorial-overlay.active { display: block; animation: fadeIn 0.3s ease; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-/* NUEVA CLASE PARA RESALTAR EL ELEMENTO */
 .tutorial-highlight {
     position: relative;
     z-index: 100000 !important; 
@@ -230,7 +229,6 @@ body::before {
     background-color: var(--dark-blue);
 }
 
-/* FORZAR EL MODAL FIJO ABAJO */
 .tutorial-tooltip {
     position: fixed !important;
     top: auto !important;
@@ -332,4 +330,23 @@ body::before {
     .trivia-option-btn { font-size: 0.85rem; padding: 0.6rem 0.8rem; }
     .info-card h3 { font-size: 1.2rem; }
     .video-thumbnail { width: 80px; height: 50px; }
+}
+
+/* ===== ESTILOS PARA LA GALERÍA Y FILTROS DE VIDEO ===== */
+.active-video {
+    background: rgba(0, 255, 255, 0.1) !important;
+    border-color: var(--neon-cyan) !important;
+    transform: translateX(5px);
+}
+
+.active-video .video-thumbnail {
+    background: linear-gradient(135deg, var(--neon-cyan) 0%, var(--primary-magenta) 100%);
+}
+
+.active-video .video-thumbnail i {
+    color: white !important;
+}
+
+#mainVideoPlayer {
+    transition: filter 0.5s ease-in-out;
 }
