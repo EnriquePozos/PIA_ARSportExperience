@@ -1,17 +1,19 @@
 import * as THREE from 'three';
 import { MindARThree } from 'mindar-image-three';
+// Importamos la nueva herramienta para cargar modelos 3D reales
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 // ===== CONFIGURACIÓN DE MODELOS 3D Y DATOS CURIOSOS (9 SELECCIONES) =====
 const models3D = [
-    { id: 'mexico', name: 'México', description: 'Único país en ser sede de tres Copas del Mundo (1970, 1986 y 2026).', type: 'sphere', color: 0xFFFFFF, scale: 0.5 },
-    { id: 'sudafrica', name: 'Sudáfrica', description: 'Primer país africano en albergar una Copa del Mundo de la FIFA (2010).', type: 'cone', color: 0xFFD700, scale: 0.6 },
-    { id: 'tunez', name: 'Túnez', description: 'Primera selección africana en ganar un partido mundialista (contra México en 1978).', type: 'box', color: 0xFF3377, scale: 0.5 },
-    { id: 'uruguay', name: 'Uruguay', description: 'Primer campeón del mundo en la historia (1930) y protagonista del épico Maracanazo.', type: 'cylinder', color: 0x00FF00, scale: 0.6 },
-    { id: 'uzbekistan', name: 'Uzbekistán', description: 'Potencia emergente de Asia, recientes campeones de la Copa Asiática Sub-20.', type: 'torus', color: 0x00FFFF, scale: 0.4 },
-    { id: 'colombia', name: 'Colombia', description: 'Su mejor participación histórica fue llegar a Cuartos de Final en Brasil 2014.', type: 'icosahedron', color: 0x9D00FF, scale: 0.5 },
-    { id: 'corea', name: 'Corea del Sur', description: 'Único país asiático en alcanzar las Semifinales de un Mundial (2002).', type: 'capsule', color: 0xFF8800, scale: 0.5 },
-    { id: 'espana', name: 'España', description: 'Campeones en 2010 deslumbrando al mundo con su icónico estilo "Tiki-Taka".', type: 'dodecahedron', color: 0xFF0055, scale: 0.55 },
-    { id: 'japon', name: 'Japón', description: 'Famosos por dejar su vestidor impecable y con grullas de origami tras cada partido.', type: 'octahedron', color: 0x0000FF, scale: 0.6 }
+    { id: 'mexico', name: 'México', description: 'Único país en ser sede de tres Copas del Mundo (1970, 1986 y 2026).', url: './models/mexico.glb', scale: 5 },
+    { id: 'sudafrica', name: 'Sudáfrica', description: 'Primer país africano en albergar una Copa del Mundo de la FIFA (2010).', url: './models/sudafrica.glb', scale: 5 },
+    { id: 'tunez', name: 'Túnez', description: 'Primera selección africana en ganar un partido mundialista (contra México en 1978).', url: './models/tunez.glb', scale: 5 },
+    { id: 'uruguay', name: 'Uruguay', description: 'Primer campeón del mundo en la historia (1930) y protagonista del épico Maracanazo.', url: './models/uruguay.glb', scale: 5 },
+    { id: 'uzbekistan', name: 'Uzbekistán', description: 'Potencia emergente de Asia, recientes campeones de la Copa Asiática Sub-20.', url: './models/uzbekistan.glb', scale: 5 },
+    { id: 'colombia', name: 'Colombia', description: 'Su mejor participación histórica fue llegar a Cuartos de Final en Brasil 2014.', url: './models/colombia.glb', scale: 5 },
+    { id: 'corea', name: 'Corea del Sur', description: 'Único país asiático en alcanzar las Semifinales de un Mundial (2002).', url: './models/korea.glb', scale: 5 },
+    { id: 'espana', name: 'España', description: 'Campeones en 2010 deslumbrando al mundo con su icónico estilo "Tiki-Taka".', url: './models/espania.glb', scale: 5 },
+    { id: 'japon', name: 'Japón', description: 'Famosos por dejar su vestidor impecable y con grullas de origami tras cada partido.', url: './models/japon.glb', scale: 5 }
 ];
 
 // ===== CONFIGURACIÓN DE TRIVIA (15 PREGUNTAS) =====
@@ -77,15 +79,52 @@ async function initAR() {
         directionalLight.position.set(0, 5, 5);
         scene.add(directionalLight);
         
+        // --- NUEVO SISTEMA DE CARGA DE MODELOS ---
+        const loader = new GLTFLoader();
+
         models3D.forEach((item, index) => {
             const anchor = mindarThree.addAnchor(index);
-            const mesh = createModel(item);
-            anchor.group.add(mesh);
+            
+            // Cargar el modelo 3D asíncronamente
+            loader.load(
+                item.url,
+                (gltf) => {
+                    const model = gltf.scene;
+                    
+                    // Ajustar tamaño del modelo
+                    model.scale.set(item.scale, item.scale, item.scale);
+                    
+                    // Ajustar posición inicial (ligeramente elevado)
+                    model.position.set(0, 0, 0.1);
+                    
+                    // Centrar el modelo si su ancla original viene desfasada
+                    const box = new THREE.Box3().setFromObject(model);
+                    const center = box.getCenter(new THREE.Vector3());
+                    model.position.sub(center); 
+                    
+                    // Guardamos la referencia al modelo para poder rotarlo después
+                    item.mesh = model;
+                    
+                    anchor.group.add(model);
+                },
+                (xhr) => {
+                    // Opcional: ver progreso en consola
+                    console.log(`${item.name} cargando: ${(xhr.loaded / xhr.total * 100).toFixed(2)}%`);
+                },
+                (error) => {
+                    console.error(`Error al cargar el modelo de ${item.name}:`, error);
+                }
+            );
             
             anchor.onTargetFound = () => {
                 console.log(`¡Marcador ${index} (${item.name}) detectado!`);
-                currentObject = mesh;
+                
+                // Asignamos el modelo cargado a la variable global para los controles
+                if(item.mesh) {
+                    currentObject = item.mesh; 
+                }
                 currentAnchor = anchor;
+                
                 updateStatus(`¡${item.name} detectado!`, 'active');
                 updateScanInfo(item);
                 
@@ -97,6 +136,7 @@ async function initAR() {
                 console.log(`Marcador ${index} perdido`);
                 updateStatus('Buscando marcador...', 'searching');
                 resetScanInfo();
+                currentObject = null; // Limpiar selección al perder el marcador
             };
         });
         
@@ -119,34 +159,6 @@ async function initAR() {
         updateStatus('Error al iniciar AR', 'error');
         showARError(error.message);
     }
-}
-
-// ===== CREAR MODELOS 3D =====
-function createModel(modelData) {
-    let geometry, material, mesh;
-    
-    const baseMaterial = new THREE.MeshBasicMaterial({
-        color: modelData.color,
-        transparent: true,
-        opacity: 0.9,
-    });
-
-    switch(modelData.type) {
-        case 'sphere': geometry = new THREE.SphereGeometry(modelData.scale, 32, 32); material = baseMaterial; break;
-        case 'cone': geometry = new THREE.ConeGeometry(modelData.scale * 0.5, modelData.scale * 1.5, 32); material = baseMaterial; break;
-        case 'box': geometry = new THREE.BoxGeometry(modelData.scale, modelData.scale, modelData.scale); material = baseMaterial; break;
-        case 'cylinder': geometry = new THREE.CylinderGeometry(modelData.scale * 0.4, modelData.scale * 0.4, modelData.scale * 1.2, 32); material = baseMaterial; break;
-        case 'torus': geometry = new THREE.TorusGeometry(modelData.scale, modelData.scale * 0.3, 16, 100); material = baseMaterial; break;
-        case 'icosahedron': geometry = new THREE.IcosahedronGeometry(modelData.scale, 0); material = baseMaterial; break;
-        case 'capsule': geometry = new THREE.CapsuleGeometry(modelData.scale * 0.3, modelData.scale * 0.8, 4, 8); material = baseMaterial; break;
-        case 'dodecahedron': geometry = new THREE.DodecahedronGeometry(modelData.scale, 0); material = baseMaterial; break;
-        case 'octahedron': geometry = new THREE.OctahedronGeometry(modelData.scale, 0); material = baseMaterial; break;
-        default: geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5); material = baseMaterial;
-    }
-
-    mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(0, 0, 0.3);
-    return mesh;
 }
 
 // ===== ROTAR MODELO =====
