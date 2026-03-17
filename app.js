@@ -5,15 +5,15 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 // ===== CONFIGURACIÓN DE MODELOS 3D Y DATOS CURIOSOS (9 SELECCIONES) =====
 const models3D = [
-    { id: 'mexico', name: 'México', description: 'Único país en ser sede de tres Copas del Mundo (1970, 1986 y 2026).', url: './models/mexico.glb', scale: 5 },
-    { id: 'sudafrica', name: 'Sudáfrica', description: 'Primer país africano en albergar una Copa del Mundo de la FIFA (2010).', url: './models/sudafrica.glb', scale: 5 },
-    { id: 'tunez', name: 'Túnez', description: 'Primera selección africana en ganar un partido mundialista (contra México en 1978).', url: './models/tunez.glb', scale: 5 },
-    { id: 'uruguay', name: 'Uruguay', description: 'Primer campeón del mundo en la historia (1930) y protagonista del épico Maracanazo.', url: './models/uruguay.glb', scale: 5 },
-    { id: 'uzbekistan', name: 'Uzbekistán', description: 'Potencia emergente de Asia, recientes campeones de la Copa Asiática Sub-20.', url: './models/uzbekistan.glb', scale: 5 },
-    { id: 'colombia', name: 'Colombia', description: 'Su mejor participación histórica fue llegar a Cuartos de Final en Brasil 2014.', url: './models/colombia.glb', scale: 5 },
-    { id: 'corea', name: 'Corea del Sur', description: 'Único país asiático en alcanzar las Semifinales de un Mundial (2002).', url: './models/korea.glb', scale: 5 },
-    { id: 'espana', name: 'España', description: 'Campeones en 2010 deslumbrando al mundo con su icónico estilo "Tiki-Taka".', url: './models/espania.glb', scale: 5 },
-    { id: 'japon', name: 'Japón', description: 'Famosos por dejar su vestidor impecable y con grullas de origami tras cada partido.', url: './models/japon.glb', scale: 5 }
+    { id: 'mexico', name: 'México', description: 'Único país en ser sede de tres Copas del Mundo (1970, 1986 y 2026).', url: './models/mexico.glb', scale: 0.5 },
+    { id: 'sudafrica', name: 'Sudáfrica', description: 'Primer país africano en albergar una Copa del Mundo de la FIFA (2010).', url: './models/sudafrica.glb', scale: 0.5 },
+    { id: 'tunez', name: 'Túnez', description: 'Primera selección africana en ganar un partido mundialista (contra México en 1978).', url: './models/tunez.glb', scale: 0.5 },
+    { id: 'uruguay', name: 'Uruguay', description: 'Primer campeón del mundo en la historia (1930) y protagonista del épico Maracanazo.', url: './models/uruguay.glb', scale: 0.5 },
+    { id: 'uzbekistan', name: 'Uzbekistán', description: 'Potencia emergente de Asia, recientes campeones de la Copa Asiática Sub-20.', url: './models/uzbekistan.glb', scale: 0.5 },
+    { id: 'colombia', name: 'Colombia', description: 'Su mejor participación histórica fue llegar a Cuartos de Final en Brasil 2014.', url: './models/colombia.glb', scale: 0.5 },
+    { id: 'corea', name: 'Corea del Sur', description: 'Único país asiático en alcanzar las Semifinales de un Mundial (2002).', url: './models/corea.glb', scale: 0.5 },
+    { id: 'espana', name: 'España', description: 'Campeones en 2010 deslumbrando al mundo con su icónico estilo "Tiki-Taka".', url: './models/espana.glb', scale: 0.5 },
+    { id: 'japon', name: 'Japón', description: 'Famosos por dejar su vestidor impecable y con grullas de origami tras cada partido.', url: './models/japon.glb', scale: 0.5 }
 ];
 
 // ===== CONFIGURACIÓN DE TRIVIA (15 PREGUNTAS) =====
@@ -108,7 +108,6 @@ async function initAR() {
                     anchor.group.add(model);
                 },
                 (xhr) => {
-                    // Opcional: ver progreso en consola
                     console.log(`${item.name} cargando: ${(xhr.loaded / xhr.total * 100).toFixed(2)}%`);
                 },
                 (error) => {
@@ -136,7 +135,7 @@ async function initAR() {
                 console.log(`Marcador ${index} perdido`);
                 updateStatus('Buscando marcador...', 'searching');
                 resetScanInfo();
-                currentObject = null; // Limpiar selección al perder el marcador
+                currentObject = null; 
             };
         });
         
@@ -252,10 +251,11 @@ navLinks.forEach(link => {
     link.addEventListener('click', (e) => {
         const page = link.getAttribute('data-page');
         
-        // Bloqueo de Galería
+        // Bloqueo de Galería con Nuevo Modal
         if (page === 'gallery' && !isGalleryUnlocked) {
             e.preventDefault();
-            alert("🔒 ¡Galería Bloqueada!\n\nDebes escanear la bandera de alguna selección en la cámara AR para desbloquear su contenido exclusivo.");
+            const lockedModal = document.getElementById('lockedModal');
+            if(lockedModal) lockedModal.classList.add('active');
             return;
         }
         
@@ -695,10 +695,44 @@ document.getElementById('btnFilterCustom').addEventListener('click', function() 
     videoPlayer.style.filter = 'saturate(250%) contrast(1.2) sepia(40%) hue-rotate(320deg)';
 });
 
-// ===== INICIALIZAR AL CARGAR =====
+// ===== MODAL DE GALERÍA BLOQUEADA =====
+const lockedModal = document.getElementById('lockedModal');
+const lockedModalCloseBtn = document.getElementById('lockedModalCloseBtn');
+const lockedModalCloseIcon = document.getElementById('lockedModalCloseIcon');
+const lockedModalOverlay = document.getElementById('lockedModalOverlay');
+
+function closeLockedModal() {
+    if(lockedModal) lockedModal.classList.remove('active');
+}
+
+if(lockedModalCloseBtn) lockedModalCloseBtn.addEventListener('click', closeLockedModal);
+if(lockedModalCloseIcon) lockedModalCloseIcon.addEventListener('click', closeLockedModal);
+if(lockedModalOverlay) lockedModalOverlay.addEventListener('click', closeLockedModal);
+
+// ===== LÓGICA DE LANDING PAGE E INICIALIZACIÓN =====
+const landingPage = document.getElementById('landingPage');
+const startAppBtn = document.getElementById('startAppBtn');
+const mainHeader = document.getElementById('mainHeader');
+const mainContent = document.getElementById('mainContent');
+
+startAppBtn.addEventListener('click', () => {
+    // 1. Añadir clase para desaparecer suavemente la landing page
+    landingPage.classList.add('landing-fade-out');
+    
+    // 2. Mostrar la interfaz principal
+    mainHeader.style.display = 'block';
+    mainContent.style.display = 'block';
+    
+    // 3. Iniciar la experiencia AR y revisar si es la primera vez (Tutorial)
+    setTimeout(() => {
+        landingPage.style.display = 'none'; // Quitarla completamente del DOM
+        if(homePage.style.display !== 'none') initAR();
+        checkFirstTime();
+    }, 800);
+});
+
+// Al cargar la ventana, solo preparamos la trivia, pero NO iniciamos la cámara AR
 window.addEventListener('load', () => {
-    console.log('✅ Aplicación AR cargada');
+    console.log('✅ Aplicación cargada. Esperando inicio en Landing Page...');
     loadQuestion();
-    if(homePage.style.display !== 'none') initAR();
-    checkFirstTime();
 });

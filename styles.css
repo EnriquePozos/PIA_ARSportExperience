@@ -220,6 +220,7 @@ body::before {
 .tutorial-overlay.active { display: block; animation: fadeIn 0.3s ease; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
+/* NUEVA CLASE PARA RESALTAR EL ELEMENTO */
 .tutorial-highlight {
     position: relative;
     z-index: 100000 !important; 
@@ -229,6 +230,7 @@ body::before {
     background-color: var(--dark-blue);
 }
 
+/* FORZAR EL MODAL FIJO ABAJO */
 .tutorial-tooltip {
     position: fixed !important;
     top: auto !important;
@@ -349,4 +351,102 @@ body::before {
 
 #mainVideoPlayer {
     transition: filter 0.5s ease-in-out;
+}
+
+/* ===== ESTILOS DE LA LANDING PAGE ===== */
+.landing-page {
+    position: fixed;
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100vh;
+    background: linear-gradient(135deg, var(--dark-blue) 0%, var(--deep-purple) 50%, #2a0a3d 100%);
+    z-index: 100000; /* Por encima de todo */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.8s ease-in-out, visibility 0.8s;
+}
+
+.landing-page::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at center, rgba(212, 20, 90, 0.2) 0%, transparent 60%);
+    animation: pulse 4s infinite alternate;
+}
+
+.landing-content {
+    position: relative;
+    z-index: 1;
+    padding: 2rem;
+    max-width: 800px;
+}
+
+.landing-logo {
+    font-size: 5.5rem;
+    color: var(--neon-cyan);
+    animation: float 3s ease-in-out infinite;
+    text-shadow: 0 0 20px var(--neon-cyan);
+}
+
+.landing-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 4rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+.landing-title span {
+    color: var(--primary-magenta);
+    display: block;
+    font-size: 2.8rem;
+}
+
+.landing-subtitle {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.landing-btn {
+    background: linear-gradient(135deg, var(--primary-magenta) 0%, var(--secondary-magenta) 100%);
+    border: 2px solid var(--primary-magenta);
+    color: white;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    padding: 1rem 2.5rem;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 10px 30px rgba(212, 20, 90, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.landing-btn:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 15px 40px rgba(212, 20, 90, 0.6), 0 0 20px var(--neon-cyan);
+    border-color: var(--neon-cyan);
+}
+
+.landing-btn i {
+    margin-right: 10px;
+}
+
+.landing-fade-out {
+    opacity: 0;
+    visibility: hidden;
+}
+
+@media (max-width: 768px) {
+    .landing-title { font-size: 2.5rem; }
+    .landing-title span { font-size: 1.8rem; }
+    .landing-logo { font-size: 4rem; }
+    .landing-subtitle { font-size: 1rem; }
 }

@@ -17,7 +17,20 @@
 </head>
 <body>
     
-    <header class="header">
+    <div class="landing-page" id="landingPage">
+        <div class="landing-content text-center">
+            <div class="landing-logo mb-4">
+                <i class="fas fa-futbol"></i>
+            </div>
+            <h1 class="landing-title">AR Sports <span>Experience</span></h1>
+            <p class="landing-subtitle">Descubre la historia del fútbol mundial a través de Realidad Aumentada y contenido interactivo.</p>
+            <button class="landing-btn mt-4" id="startAppBtn">
+                <i class="fas fa-power-off"></i> Iniciar Experiencia
+            </button>
+        </div>
+    </div>
+    
+    <header class="header" id="mainHeader" style="display: none;">
         <div class="container-fluid">
             <nav class="navbar navbar-expand">
                 <div class="container-fluid px-0">
@@ -40,7 +53,7 @@
         </div>
     </header>
     
-    <main class="main-content">
+    <main class="main-content" id="mainContent" style="display: none;">
         <div class="container">
             
             <div class="home-page" id="homePage">
@@ -182,7 +195,24 @@
             </div>
         </div>
     </div>
-    
+    <div class="stats-modal" id="lockedModal">
+        <div class="stats-modal-overlay" id="lockedModalOverlay"></div>
+        <div class="stats-modal-content" style="max-width: 400px; text-align: center; padding: 2.5rem 2rem;">
+            <button class="stats-modal-close" id="lockedModalCloseIcon">
+                <i class="fas fa-times"></i>
+            </button>
+            <div style="font-size: 4rem; color: var(--accent-pink); margin-bottom: 1rem; animation: float 3s ease-in-out infinite;">
+                <i class="fas fa-lock"></i>
+            </div>
+            <h2 style="font-family: 'Orbitron', sans-serif; font-size: 1.8rem; margin-bottom: 1rem; text-transform: uppercase;">Galería Bloqueada</h2>
+            <p style="margin-bottom: 2rem; color: rgba(255,255,255,0.9); font-size: 1rem; line-height: 1.5;">
+                Debes escanear la bandera de alguna selección en la cámara AR para desbloquear su contenido exclusivo.
+            </p>
+            <button class="tutorial-btn tutorial-btn-primary" id="lockedModalCloseBtn" style="width: 100%;">
+                <i class="fas fa-camera"></i> Ir a escanear
+            </button>
+        </div>
+    </div>
     <div class="tutorial-overlay" id="tutorialOverlay">
         <div class="tutorial-tooltip" id="tutorialTooltip">
             <div class="tutorial-header">
