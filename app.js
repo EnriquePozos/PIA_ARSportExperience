@@ -4,16 +4,17 @@ import { MindARThree } from 'mindar-image-three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 // ===== CONFIGURACIÓN DE MODELOS 3D Y DATOS CURIOSOS (9 SELECCIONES) =====
+// Se ha actualizado la escala a 5 para todos los modelos
 const models3D = [
-    { id: 'mexico', name: 'México', description: 'Único país en ser sede de tres Copas del Mundo (1970, 1986 y 2026).', url: './models/mexico.glb', scale: 0.5 },
-    { id: 'sudafrica', name: 'Sudáfrica', description: 'Primer país africano en albergar una Copa del Mundo de la FIFA (2010).', url: './models/sudafrica.glb', scale: 0.5 },
-    { id: 'tunez', name: 'Túnez', description: 'Primera selección africana en ganar un partido mundialista (contra México en 1978).', url: './models/tunez.glb', scale: 0.5 },
-    { id: 'uruguay', name: 'Uruguay', description: 'Primer campeón del mundo en la historia (1930) y protagonista del épico Maracanazo.', url: './models/uruguay.glb', scale: 0.5 },
-    { id: 'uzbekistan', name: 'Uzbekistán', description: 'Potencia emergente de Asia, recientes campeones de la Copa Asiática Sub-20.', url: './models/uzbekistan.glb', scale: 0.5 },
-    { id: 'colombia', name: 'Colombia', description: 'Su mejor participación histórica fue llegar a Cuartos de Final en Brasil 2014.', url: './models/colombia.glb', scale: 0.5 },
-    { id: 'corea', name: 'Corea del Sur', description: 'Único país asiático en alcanzar las Semifinales de un Mundial (2002).', url: './models/corea.glb', scale: 0.5 },
-    { id: 'espana', name: 'España', description: 'Campeones en 2010 deslumbrando al mundo con su icónico estilo "Tiki-Taka".', url: './models/espana.glb', scale: 0.5 },
-    { id: 'japon', name: 'Japón', description: 'Famosos por dejar su vestidor impecable y con grullas de origami tras cada partido.', url: './models/japon.glb', scale: 0.5 }
+    { id: 'mexico', name: 'México', description: 'Único país en ser sede de tres Copas del Mundo (1970, 1986 y 2026).', url: './models/mexico.glb', scale: 5 },
+    { id: 'sudafrica', name: 'Sudáfrica', description: 'Primer país africano en albergar una Copa del Mundo de la FIFA (2010).', url: './models/sudafrica.glb', scale: 5 },
+    { id: 'tunez', name: 'Túnez', description: 'Primera selección africana en ganar un partido mundialista (contra México en 1978).', url: './models/tunez.glb', scale: 5 },
+    { id: 'uruguay', name: 'Uruguay', description: 'Primer campeón del mundo en la historia (1930) y protagonista del épico Maracanazo.', url: './models/uruguay.glb', scale: 5 },
+    { id: 'uzbekistan', name: 'Uzbekistán', description: 'Potencia emergente de Asia, recientes campeones de la Copa Asiática Sub-20.', url: './models/uzbekistan.glb', scale: 5 },
+    { id: 'colombia', name: 'Colombia', description: 'Su mejor participación histórica fue llegar a Cuartos de Final en Brasil 2014.', url: './models/colombia.glb', scale: 5 },
+    { id: 'corea', name: 'Corea del Sur', description: 'Único país asiático en alcanzar las Semifinales de un Mundial (2002).', url: './models/korea.glb', scale: 5 },
+    { id: 'espana', name: 'España', description: 'Campeones en 2010 deslumbrando al mundo con su icónico estilo "Tiki-Taka".', url: './models/espania.glb', scale: 5 },
+    { id: 'japon', name: 'Japón', description: 'Famosos por dejar su vestidor impecable y con grullas de origami tras cada partido.', url: './models/japon.glb', scale: 5 }
 ];
 
 // ===== CONFIGURACIÓN DE TRIVIA (15 PREGUNTAS) =====
@@ -79,7 +80,7 @@ async function initAR() {
         directionalLight.position.set(0, 5, 5);
         scene.add(directionalLight);
         
-        // --- NUEVO SISTEMA DE CARGA DE MODELOS ---
+        // --- NUEVO SISTEMA DE CARGA DE MODELOS CON CENTRADO PERFECTO ---
         const loader = new GLTFLoader();
 
         models3D.forEach((item, index) => {
@@ -91,21 +92,30 @@ async function initAR() {
                 (gltf) => {
                     const model = gltf.scene;
                     
-                    // Ajustar tamaño del modelo
-                    model.scale.set(item.scale, item.scale, item.scale);
-                    
-                    // Ajustar posición inicial (ligeramente elevado)
-                    model.position.set(0, 0, 0.1);
-                    
-                    // Centrar el modelo si su ancla original viene desfasada
+                    // 1. Encontrar el centro geométrico real del modelo
                     const box = new THREE.Box3().setFromObject(model);
                     const center = box.getCenter(new THREE.Vector3());
-                    model.position.sub(center); 
                     
-                    // Guardamos la referencia al modelo para poder rotarlo después
-                    item.mesh = model;
+                    // 2. Mover el modelo para forzar que su centro sea el punto (0,0,0) absoluto
+                    model.position.x = -center.x;
+                    model.position.y = -center.y;
+                    model.position.z = -center.z; 
                     
-                    anchor.group.add(model);
+                    // 3. Crear un Grupo "Envoltorio". Al añadir el modelo centrado aquí, 
+                    // evitamos problemas de rotación y posicionamiento.
+                    const wrapper = new THREE.Group();
+                    wrapper.add(model);
+                    
+                    // 4. Aplicar la nueva escala (5) al envoltorio
+                    wrapper.scale.set(item.scale, item.scale, item.scale);
+                    
+                    // 5. Fijarlo al centro del ancla de MindAR
+                    wrapper.position.set(0, 0, 0);
+                    
+                    // Guardamos la referencia al envoltorio para rotar desde el centro perfecto
+                    item.mesh = wrapper;
+                    
+                    anchor.group.add(wrapper);
                 },
                 (xhr) => {
                     console.log(`${item.name} cargando: ${(xhr.loaded / xhr.total * 100).toFixed(2)}%`);
@@ -118,7 +128,6 @@ async function initAR() {
             anchor.onTargetFound = () => {
                 console.log(`¡Marcador ${index} (${item.name}) detectado!`);
                 
-                // Asignamos el modelo cargado a la variable global para los controles
                 if(item.mesh) {
                     currentObject = item.mesh; 
                 }
@@ -127,7 +136,6 @@ async function initAR() {
                 updateStatus(`¡${item.name} detectado!`, 'active');
                 updateScanInfo(item);
                 
-                // Desbloquear galería al escanear marcador
                 unlockGalleryForCountry(index, item.name);
             };
             
@@ -578,39 +586,39 @@ helpBtn.addEventListener('click', () => {
 // Base de datos de videos locales (Mapeados del 0 al 8)
 const galleryData = {
     0: [ // México
-        { title: "Momentos inolvidables", meta: "Selección Mexicana", icon: "fa-star", src: "./video/mexico1.mp4" },
-        { title: "Top 10 Goles", meta: "El Tri en Mundiales", icon: "fa-futbol", src: "./video/mexico2.mp4" }
+        { title: "Momentos inolvidables", meta: "Selección Mexicana", icon: "fa-star", src: "https://res.cloudinary.com/dx1ps3qxg/video/upload/v1774330280/mexico2_pokjs8.mp4" },
+        { title: "Top 10 Goles", meta: "El Tri en Mundiales", icon: "fa-futbol", src: "https://res.cloudinary.com/dx1ps3qxg/video/upload/v1774330280/mexico2_pokjs8.mp4" }
     ],
     1: [ // Sudáfrica
-        { title: "Sudáfrica vs México", meta: "Mundial 2010", icon: "fa-play-circle", src: "./video/sudafrica1.mp4" },
-        { title: "Francia vs Sudáfrica", meta: "Mundial 2010", icon: "fa-play-circle", src: "./video/sudafrica2.mp4" }
+        { title: "Sudáfrica vs México", meta: "Mundial 2010", icon: "fa-play-circle", src: "https://res.cloudinary.com/dx1ps3qxg/video/upload/v1774330273/sudafrica1_yvyspp.mp4" },
+        { title: "Francia vs Sudáfrica", meta: "Mundial 2010", icon: "fa-play-circle", src: "https://res.cloudinary.com/dx1ps3qxg/video/upload/v1774330271/sudafrica2_bpmiqp.mp4" }
     ],
     2: [ // Túnez
-        { title: "Túnez vs Inglaterra", meta: "Mundial 2018", icon: "fa-play-circle", src: "./video/tunez1.mp4" },
-        { title: "Panamá vs Túnez", meta: "Mundial 2018", icon: "fa-play-circle", src: "./video/tunez2.mp4" }
+        { title: "Túnez vs Inglaterra", meta: "Mundial 2018", icon: "fa-play-circle", src: "https://res.cloudinary.com/dx1ps3qxg/video/upload/v1774330256/tunez1_x55puc.mp4" },
+        { title: "Panamá vs Túnez", meta: "Mundial 2018", icon: "fa-play-circle", src: "https://res.cloudinary.com/dx1ps3qxg/video/upload/v1774330269/tunez2_ubcsae.mp4" }
     ],
     3: [ // Uruguay
-        { title: "Goles Memorables", meta: "Uruguay en Mundiales", icon: "fa-star", src: "./video/uruguay1.mp4" },
-        { title: "Uruguay vs Portugal", meta: "Mundial 2018", icon: "fa-play-circle", src: "./video/uruguay2.mp4" }
+        { title: "Goles Memorables", meta: "Uruguay en Mundiales", icon: "fa-star", src: "https://res.cloudinary.com/dx1ps3qxg/video/upload/v1774330271/uruguay1_kgz66j.mp4" },
+        { title: "Uruguay vs Portugal", meta: "Mundial 2018", icon: "fa-play-circle", src: "https://res.cloudinary.com/dx1ps3qxg/video/upload/v1774330256/uruguay2_jze5ek.mp4" }
     ],
     4: [ // Uzbekistán (Solo 1 video)
-        { title: "Historic Campaign", meta: "Uzbekistán vs Qatar", icon: "fa-trophy", src: "./video/uzbekistan1.mp4" }
+        { title: "Historic Campaign", meta: "Uzbekistán vs Qatar", icon: "fa-trophy", src: "https://res.cloudinary.com/dx1ps3qxg/video/upload/v1774330254/uzbekistan1_ue0nrf.mp4" }
     ],
     5: [ // Colombia
-        { title: "Mejores Goles (2012-2022)", meta: "Parte 1", icon: "fa-futbol", src: "./video/colombia1.mp4" },
-        { title: "Mejores Goles (2012-2022)", meta: "Parte 2", icon: "fa-futbol", src: "./video/colombia2.mp4" }
+        { title: "Mejores Goles (2012-2022)", meta: "Parte 1", icon: "fa-futbol", src: "https://res.cloudinary.com/dx1ps3qxg/video/upload/v1774330275/colombia1_uuxvfg.mp4" },
+        { title: "Mejores Goles (2012-2022)", meta: "Parte 2", icon: "fa-futbol", src: "https://res.cloudinary.com/dx1ps3qxg/video/upload/v1774330277/colombia2_oy32sj.mp4" }
     ],
     6: [ // Corea del Sur
-        { title: "Goles Memorables", meta: "Corea en Mundiales", icon: "fa-star", src: "./video/corea1.mp4" },
-        { title: "Corea vs Alemania", meta: "Mundial 2018", icon: "fa-play-circle", src: "./video/corea2.mp4" }
+        { title: "Goles Memorables", meta: "Corea en Mundiales", icon: "fa-star", src: "https://res.cloudinary.com/dx1ps3qxg/video/upload/v1774330278/corea1_nhhqof.mp4" },
+        { title: "Corea vs Alemania", meta: "Mundial 2018", icon: "fa-play-circle", src: "https://res.cloudinary.com/dx1ps3qxg/video/upload/v1774330261/corea2_h0egag.mp4" }
     ],
     7: [ // España
-        { title: "Goles Memorables", meta: "España en Mundiales", icon: "fa-star", src: "./video/espania1.mp4" },
-        { title: "Todos los goles 2010", meta: "Villa, Iniesta & Puyol", icon: "fa-trophy", src: "./video/espania2.mp4" }
+        { title: "Goles Memorables", meta: "España en Mundiales", icon: "fa-star", src: "https://res.cloudinary.com/dx1ps3qxg/video/upload/v1774330271/espania1_bsocks.mp4" },
+        { title: "Todos los goles 2010", meta: "Villa, Iniesta & Puyol", icon: "fa-trophy", src: "https://res.cloudinary.com/dx1ps3qxg/video/upload/v1774330260/espania2_n6xvc4.mp4" }
     ],
     8: [ // Japón
-        { title: "Todos los goles 2022", meta: "Japón en Qatar", icon: "fa-futbol", src: "./video/japon1.mp4" },
-        { title: "Japón vs España", meta: "Comeback Win 2022", icon: "fa-fire", src: "./video/japon2.mp4" }
+        { title: "Todos los goles 2022", meta: "Japón en Qatar", icon: "fa-futbol", src: "https://res.cloudinary.com/dx1ps3qxg/video/upload/v1774330253/japon1_ulqmaq.mp4" },
+        { title: "Japón vs España", meta: "Comeback Win 2022", icon: "fa-fire", src: "https://res.cloudinary.com/dx1ps3qxg/video/upload/v1774330262/japon2_m3nmoj.mp4" }
     ]
 };
 
