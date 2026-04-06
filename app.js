@@ -14,7 +14,10 @@ const models3D = [
     { id: 'colombia', name: 'Colombia', description: 'Su mejor participación histórica fue llegar a Cuartos de Final en Brasil 2014.', url: './models/colombia.glb', scale: 5 },
     { id: 'corea', name: 'Corea del Sur', description: 'Único país asiático en alcanzar las Semifinales de un Mundial (2002).', url: './models/korea.glb', scale: 5 },
     { id: 'espana', name: 'España', description: 'Campeones en 2010 deslumbrando al mundo con su icónico estilo "Tiki-Taka".', url: './models/espania.glb', scale: 5 },
-    { id: 'japon', name: 'Japón', description: 'Famosos por dejar su vestidor impecable y con grullas de origami tras cada partido.', url: './models/japon.glb', scale: 5 }
+    { id: 'japon', name: 'Japón', description: 'Famosos por dejar su vestidor impecable y con grullas de origami tras cada partido.', url: './models/japon.glb', scale: 5 },
+    { id: 'usa', name: 'Estados Unidos', description: 'Estados Unidos es el país con más medallas olímpicas en la historia de los juegos.', url: './models/usa.glb', scale: 5 },
+    { id: 'canada', name: 'Canadá', description: 'El deporte nacional de invierno en Canadá es el hockey sobre hielo, y el de verano es el lacrosse.', url: './models/canada.glb', scale: 5 },
+    { id: 'ucrania', name: 'Ucrania', description: 'Ucrania tiene una enorme tradición en salto con pértiga gracias a la leyenda del atletismo Serguéi Bubka.', url: './models/ucrania.glb', scale: 5 }
 ];
 
 // ===== CONFIGURACIÓN DE TRIVIA (15 PREGUNTAS) =====
@@ -64,7 +67,7 @@ async function initAR() {
         
         mindarThree = new MindARThree({
             container: container,
-            imageTargetSrc: './banderasrelieve.mind',
+            imageTargetSrc: './banderasCompletas.mind',
             uiLoading: "no",
             uiScanning: "no", 
             uiError: "no"
@@ -619,7 +622,19 @@ const galleryData = {
     8: [ // Japón
         { title: "Todos los goles 2022", meta: "Japón en Qatar", icon: "fa-futbol", src: "https://res.cloudinary.com/dx1ps3qxg/video/upload/v1774330253/japon1_ulqmaq.mp4" },
         { title: "Japón vs España", meta: "Comeback Win 2022", icon: "fa-fire", src: "https://res.cloudinary.com/dx1ps3qxg/video/upload/v1774330262/japon2_m3nmoj.mp4" }
+    ],
+    9: [ // USA
+        { title: "USA vs Portugal", meta: "Mundial 2014 USA vs Portugal", icon: "fa-futbol", src: "https://res.cloudinary.com/dx1ps3qxg/video/upload/v1775500162/USA_v_Portugal_2014_FIFA_World_Cup_Match_Highlights_-_FIFA_360p_h264_km5hfj.mp4" },
+        { title: "USA Goals at the FIFA World Cup", meta: "Unforgettable Moments", icon: "fa-futbol", src: "https://res.cloudinary.com/dx1ps3qxg/video/upload/v1775500167/UNFORGETTABLE_USA_goals_at_the_FIFA_World_Cup_-_FIFA_360p_h264_kqgxbz.mp4" }
+    ],
+    10: [ // Canada
+        { title: "Top 5 Goals of 2025", meta: "Canada Soccer", icon: "fa-futbol", src: "https://res.cloudinary.com/dx1ps3qxg/video/upload/v1775500165/CANMNT_Top_5_Goals_of_2025_-_Canada_Soccer_360p_h264_fmzm2h.mp4" },
+        { title: "David Scores a Brace", meta: "Canada vs Iceland", icon: "fa-futbol", src: "https://res.cloudinary.com/dx1ps3qxg/video/upload/v1775500161/DAVID_SCORES_A_BRACE_Highlights_Canada_v_Iceland_-_Canada_Soccer_360p_h264_pzchza.mp4" }
+    ],
+    11: [ // Ucrania
+        { title: "ucrania sin videos", meta: " no videos disponibles", icon: "fa-futbol", src: "https://res.cloudinary.com/dx1ps3qxg/video/upload/v1775500161/DAVID_SCORES_A_BRACE_Highlights_Canada_v_Iceland_-_Canada_Soccer_360p_h264_pzchza.mp4" }
     ]
+
 };
 
 function unlockGalleryForCountry(index, countryName) {
