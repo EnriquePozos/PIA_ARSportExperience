@@ -67,7 +67,7 @@ async function initAR() {
         
         mindarThree = new MindARThree({
             container: container,
-            imageTargetSrc: './banderasCompletas.mind',
+            imageTargetSrc: './targetsnew.mind',
             uiLoading: "no",
             uiScanning: "no", 
             uiError: "no"
